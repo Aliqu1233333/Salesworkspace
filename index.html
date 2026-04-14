@@ -9,7 +9,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: #f0f0f0;
+    background: #f7f8fa;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -17,8 +17,8 @@
   }
   .page {
     width: 100%;
-    max-width: 1750px;
-    padding: 32px 36px 40px 36px;
+    max-width: 2100px;
+    padding: 36px 44px 44px 44px;
   }
 
   /* TOP BAR */
@@ -29,15 +29,15 @@
     margin-bottom: 20px;
   }
   .top-bar-title {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 34px;
+    font-weight: 700;
     color: #1a1a2e;
     line-height: 1.2;
   }
   .top-bar-sub {
-    font-size: 13px;
+    font-size: 15px;
     color: #6b7280;
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .agent-pill {
     display: flex;
@@ -46,7 +46,7 @@
     border: 1px solid #d1d5db;
     border-radius: 999px;
     padding: 7px 16px;
-    font-size: 13px;
+    font-size: 14px;
     color: #374151;
     background: #fff;
     white-space: nowrap;
@@ -90,8 +90,8 @@
     margin-bottom: 12px;
   }
   .metric-card-blue .label {
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 400 !important;
     opacity: 0.88;
     margin-bottom: 6px;
   }
@@ -108,13 +108,13 @@
     margin-bottom: 10px;
   }
   .metric-card-white .label {
-    font-size: 12px;
+    font-size: 13px;
     color: #6b7280;
     margin-bottom: 5px;
   }
   .metric-card-white .value {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 34px;
+    font-weight: 700;
     color: #1a1a2e;
   }
 
@@ -151,7 +151,7 @@
     font-size: 15px;
   }
   .take-action-text {
-    font-size: 13px;
+    font-size: 14px;
     color: #374151;
     line-height: 1.55;
     flex: 1;
@@ -163,7 +163,7 @@
     border-radius: 6px;
     padding: 10px 18px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400 !important;
     margin-top: 20px;
     cursor: pointer;
     text-align: center;
@@ -177,16 +177,16 @@
     border-radius: 14px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    padding: 22px 26px 8px 26px;
+    padding: 26px 30px 12px 30px;
   }
   .actions-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
     color: #122349;
     margin-bottom: 4px;
   }
   .actions-subtitle {
-    font-size: 13px;
+    font-size: 14px;
     color: #6b7280;
     margin-bottom: 18px;
   }
@@ -199,7 +199,7 @@
     margin-bottom: 4px;
   }
   .col-label {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: #9aa3af;
     text-transform: uppercase;
@@ -209,7 +209,7 @@
     display: grid;
     grid-template-columns: 2fr 1fr 1.4fr 1fr;
     align-items: center;
-    padding: 16px 0;
+    padding: 18px 0;
     border-bottom: none;
   }
   .action-left {
@@ -249,21 +249,21 @@
 
   .action-info {}
   .action-name {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #111827;
     margin-bottom: 2px;
   }
   .action-subtext {
-    font-size: 12px;
+    font-size: 13px;
     color: #6b7280;
   }
 
   /* Related To column */
   .action-related {
-    font-size: 13px;
+    font-size: 14px;
     color: #1048a8;
-    font-weight: 500;
+    font-weight: 400 !important;
     cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dotted;
@@ -279,13 +279,13 @@
     border: 1.5px solid #e0e8e2;
     border-radius: 6px;
     padding: 5px 12px;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 400 !important;
     color: #374151;
     background: #f7faf8;
     white-space: nowrap;
   }
-  .rationale-spark { font-size: 13px; color: #6366f1; }
+  .rationale-spark { font-size: 14px; color: #6366f1; }
 
   /* Suggested Action pill button */
   .action-btn {
@@ -295,7 +295,7 @@
     border: 1.5px solid #6b7280;
     border-radius: 999px;
     padding: 7px 18px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #1d4ed8;
     background: #fff;
@@ -305,7 +305,7 @@
     flex-shrink: 0;
   }
   .action-btn:hover { background: #eff6ff; border-color: #374151; }
-  .action-btn-spark { font-size: 11px; color: #1d4ed8; }
+  .action-btn-spark { font-size: 12px; color: #1d4ed8; }
 
   /* ACTIVITY DROPDOWN */
   .activity-dropdown {
@@ -319,7 +319,7 @@
     border: 1px solid #d1d5db;
     border-radius: 999px;
     padding: 7px 14px;
-    font-size: 13px;
+    font-size: 14px;
     color: #374151;
     background: #fff;
     cursor: pointer;
@@ -344,7 +344,7 @@
   }
   .activity-menu.open { display: block; }
   .activity-menu-title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     font-family: 'Inter', system-ui, sans-serif;
     color: #122349;
@@ -381,7 +381,7 @@
   .activity-item-info { flex: 1; }
   .activity-item-label { font-size: 12.5px; font-weight: 400; color: #111827; }
   .activity-item-count {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #6b7280;
     background: #f8f5ff;
@@ -393,7 +393,7 @@
 
   /* AI BRIEF PANEL */
   .right-panel {
-    width: 460px;
+    width: 510px;
     flex-shrink: 0;
     background: linear-gradient(145deg, #eef2ff 0%, #e0f2fe 100%);
     padding: 16px;
@@ -414,11 +414,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     color: #111827;
   }
-  .ai-brief-spark { color: #6366f1; font-size: 14px; }
+  .ai-brief-spark { color: #6366f1; font-size: 16px; }
   .ai-brief-badge {
     margin-left: auto;
     background: #f0fdf4;
@@ -446,9 +446,9 @@
     animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .ai-brief-loading-text { font-size: 12px; color: #9ca3af; }
+  .ai-brief-loading-text { font-size: 13px; color: #9ca3af; }
   .ai-brief-body {
-    font-size: 12.5px;
+    font-size: 13.5px;
     color: #374151;
     line-height: 1.6;
     flex: 1;
@@ -459,9 +459,9 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    font-size: 12px;
+    font-size: 13px;
     color: #6366f1;
-    font-weight: 500;
+    font-weight: 400 !important;
     cursor: pointer;
     padding: 6px;
     border-radius: 6px;
