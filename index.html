@@ -74,8 +74,8 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 20px 20px 20px 20px;
-    width: 240px;
+    padding: 24px 24px 24px 24px;
+    width: 290px;
     flex-shrink: 0;
     border-right: 1px solid #e5e7eb;
   }
@@ -85,50 +85,65 @@
   .metric-card-blue {
     background: #2563eb;
     border-radius: 10px;
-    padding: 14px 16px 16px 16px;
+    padding: 18px 20px 20px 20px;
     color: #fff;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   .metric-card-blue .label {
     font-size: 13px;
     font-weight: 400 !important;
     opacity: 0.88;
     margin-bottom: 6px;
+    text-align: center;
   }
   .metric-card-blue .value {
-    font-size: 28px;
-    font-weight: 700;
+    font-size: 34px;
+    font-weight: 600;
     line-height: 1;
+    letter-spacing: -0.02em;
+    text-align: center;
   }
   .metric-card-white {
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-    padding: 12px 16px 14px 16px;
-    margin-bottom: 10px;
+    padding: 16px 20px 18px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   .metric-card-white .label {
     font-size: 13px;
     color: #6b7280;
     margin-bottom: 5px;
+    text-align: center;
   }
   .metric-card-white .value {
-    font-size: 34px;
-    font-weight: 700;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
     color: #1a1a2e;
+    text-align: center;
   }
-
 
   /* RIGHT PANEL */
   .right-panel {
-    width: 270px;
+    width: 510px;
     flex-shrink: 0;
-    background: linear-gradient(145deg, #ede9fe 0%, #dbeafe 100%);
+    background: linear-gradient(145deg, #eef2ff 0%, #e0f2fe 100%);
     padding: 16px;
     display: flex;
     flex-direction: column;
   }
-  .right-inner-card {
+  .ai-brief-card {
     background: #fff;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
@@ -136,40 +151,74 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 10px;
   }
-  .take-action-title {
+  .ai-brief-header {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 14px;
     font-weight: 600;
     color: #111827;
-    margin-bottom: 10px;
   }
-  .take-action-icon {
-    color: #6366f1;
-    font-size: 15px;
+  .ai-brief-spark { color: #6366f1; font-size: 16px; }
+  .ai-brief-badge {
+    margin-left: auto;
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
   }
-  .take-action-text {
-    font-size: 14px;
+  .ai-brief-date {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .ai-brief-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 10px;
+    padding: 12px 0;
+  }
+  .ai-brief-spinner {
+    width: 22px; height: 22px;
+    border: 2px solid #e0e7ff;
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-brief-loading-text { font-size: 13px; color: #9ca3af; }
+  .ai-brief-body {
+    font-size: 13.5px;
     color: #374151;
-    line-height: 1.55;
+    line-height: 1.6;
     flex: 1;
   }
-  .view-btn {
-    display: inline-block;
-    background: #2563eb;
-    color: #fff;
-    border-radius: 6px;
-    padding: 10px 18px;
-    font-size: 14px;
+  .ai-brief-body strong { color: #111827; font-weight: 600; }
+  .ai-brief-refresh {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 13px;
+    color: #6366f1;
     font-weight: 400 !important;
-    margin-top: 20px;
     cursor: pointer;
-    text-align: center;
+    padding: 6px;
+    border-radius: 6px;
     border: none;
+    background: none;
     width: 100%;
   }
+  .ai-brief-refresh:hover { background: #f5f3ff; }
 
   /* ACTIONS FOR YOU */
   .actions-section {
@@ -210,14 +259,19 @@
     grid-template-columns: 2fr 1fr 1.4fr 1fr;
     align-items: center;
     padding: 18px 0;
-    border-bottom: none;
+    border-bottom: 1px solid #f3f4f6;
+    animation: fadeIn 0.22s ease forwards;
+  }
+  .action-row:last-child { border-bottom: none; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
   .action-left {
     display: flex;
     align-items: center;
     gap: 14px;
   }
-  /* Circular filled icons — Salesforce style */
   .action-icon {
     width: 34px; height: 34px;
     border-radius: 50%;
@@ -228,25 +282,12 @@
     overflow: hidden;
   }
   .action-icon svg {
-    width: 94%;
-    height: 94%;
+    width: 58%;
+    height: 58%;
     flex-shrink: 0;
     display: block;
     margin: auto;
   }
-  .action-icon.icon-520 svg {
-    width: 69%;
-    height: 69%;
-    display: block;
-    margin: auto;
-  }
-  .action-icon.icon-call svg {
-    width: 65.5%;
-    height: 65.5%;
-    display: block;
-    margin: auto;
-  }
-
   .action-info {}
   .action-name {
     font-size: 14px;
@@ -284,6 +325,7 @@
     color: #374151;
     background: #f7faf8;
     white-space: nowrap;
+    cursor: default;
   }
   .rationale-spark { font-size: 14px; color: #6366f1; }
 
@@ -346,7 +388,6 @@
   .activity-menu-title {
     font-size: 12px;
     font-weight: 600;
-    font-family: 'Inter', system-ui, sans-serif;
     color: #122349;
     text-transform: uppercase;
     letter-spacing: 0.07em;
@@ -368,16 +409,7 @@
     flex-shrink: 0;
     overflow: hidden;
   }
-  .activity-icon-wrap svg {
-    width: 75%;
-    height: 75%;
-    display: block;
-    margin: auto;
-  }
-  .activity-icon-wrap.icon-520 svg {
-    width: 62%;
-    height: 62%;
-  }
+  .activity-icon-wrap svg { width: 62%; height: 62%; display: block; margin: auto; }
   .activity-item-info { flex: 1; }
   .activity-item-label { font-size: 12.5px; font-weight: 400; color: #111827; }
   .activity-item-count {
@@ -391,85 +423,110 @@
     flex-shrink: 0;
   }
 
-  /* AI BRIEF PANEL */
-  .right-panel {
-    width: 510px;
-    flex-shrink: 0;
-    background: linear-gradient(145deg, #eef2ff 0%, #e0f2fe 100%);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
+  /* AGENT RATIONALE HOVER CARD */
+  .rationale-hover {
+    position: relative;
+    display: inline-block;
   }
-  .ai-brief-card {
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e5e7eb;
-    padding: 16px;
-    flex: 1;
+  .rationale-hover-card {
+    position: absolute;
+    left: calc(100% + 18px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 360px;
+    background: #ffffff;
+    border: 1px solid #dbe3f0;
+    border-radius: 14px;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+    z-index: 200;
+    overflow: visible;
+  }
+  .rationale-hover:hover .rationale-hover-card,
+  .rationale-hover:focus-within .rationale-hover-card {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%);
+  }
+  .rationale-hover-card::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 18px;
+    height: 18px;
+    background: #ffffff;
+    border-left: 1px solid #dbe3f0;
+    border-bottom: 1px solid #dbe3f0;
+    border-radius: 2px;
+  }
+  .rationale-hover-header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef2f7;
   }
-  .ai-brief-header {
-    display: flex;
+  .rationale-hover-ai-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #2563eb 0%, #7c3aed 100%);
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 6px 14px rgba(99, 102, 241, 0.24);
+    flex-shrink: 0;
+  }
+  .rationale-hover-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d4ed8;
+    line-height: 1.3;
+  }
+  .rationale-hover-body {
+    padding: 14px 18px 18px 18px;
+    background: linear-gradient(180deg, #fafaff 0%, #f8fbff 100%);
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+  .rationale-hover-label {
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 14px;
+    font-size: 12.5px;
     font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
     color: #111827;
+    margin-bottom: 10px;
   }
-  .ai-brief-spark { color: #6366f1; font-size: 16px; }
-  .ai-brief-badge {
-    margin-left: auto;
-    background: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-  }
-  .ai-brief-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    gap: 10px;
-    padding: 12px 0;
-  }
-  .ai-brief-spinner {
-    width: 22px; height: 22px;
-    border: 2px solid #e0e7ff;
-    border-top-color: #6366f1;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .ai-brief-loading-text { font-size: 13px; color: #9ca3af; }
-  .ai-brief-body {
-    font-size: 13.5px;
-    color: #374151;
-    line-height: 1.6;
-    flex: 1;
-  }
-  .ai-brief-body strong { color: #111827; font-weight: 600; }
-  .ai-brief-refresh {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+  .rationale-hover-label span { font-size: 12px; color: #6366f1; }
+  .rationale-hover-text {
     font-size: 13px;
-    color: #6366f1;
-    font-weight: 400 !important;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    border: none;
-    background: none;
-    width: 100%;
+    line-height: 1.65;
+    color: #475569;
   }
-  .ai-brief-refresh:hover { background: #f5f3ff; }
+
+  /* EMPTY STATE */
+  .actions-empty {
+    text-align: center;
+    padding: 48px 0;
+    color: #9ca3af;
+    font-size: 14px;
+    font-style: italic;
+  }
+  .actions-error {
+    text-align: center;
+    padding: 32px 0;
+    color: #ef4444;
+    font-size: 13px;
+  }
 </style>
 </head>
 <body>
@@ -479,7 +536,7 @@
   <div class="top-bar">
     <div>
       <div class="top-bar-title">Sales Workspace</div>
-      <div class="top-bar-sub">Hi Joey, here are some suggestions for your day.</div>
+      <div class="top-bar-sub" id="topBarSub">Loading your pipeline brief…</div>
     </div>
     <div class="activity-dropdown" id="activityDropdown">
       <div class="activity-pill" onclick="toggleActivity()">
@@ -489,57 +546,41 @@
       </div>
       <div class="activity-menu" id="activityMenu">
         <div class="activity-menu-title">Your Activity · Last 14 Days</div>
-
         <div class="activity-item">
           <div class="activity-icon-wrap" style="background:#06a59a;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>
           </div>
-          <div class="activity-item-info">
-            <div class="activity-item-label">New Leads Added</div>
-          </div>
+          <div class="activity-item-info"><div class="activity-item-label">New Leads Added</div></div>
           <div class="activity-item-count">14</div>
         </div>
-
         <div class="activity-item">
-          <div class="activity-icon-wrap icon-520" style="background:#3ba755;">
+          <div class="activity-icon-wrap" style="background:#3ba755;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m485 378-61-49a39 39 0 0 0-48-1l-52 38c-6 5-15 4-21-2l-78-70-70-78c-6-6-6-14-2-21l38-52c11-14 10-34-1-48l-49-61a40 40 0 0 0-59-3L32 83c-8 8-12 20-12 31 5 102 51 199 119 267s165 114 267 119c11 1 22-4 30-12l52-52c17-16 16-44-3-58z"/></svg>
           </div>
-          <div class="activity-item-info">
-            <div class="activity-item-label">Conversations Started</div>
-          </div>
+          <div class="activity-item-info"><div class="activity-item-label">Conversations Started</div></div>
           <div class="activity-item-count">8</div>
         </div>
-
         <div class="activity-item">
           <div class="activity-icon-wrap" style="background:#ff5d2d;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>
           </div>
-          <div class="activity-item-info">
-            <div class="activity-item-label">Pipeline Movement</div>
-          </div>
+          <div class="activity-item-info"><div class="activity-item-label">Pipeline Movement</div></div>
           <div class="activity-item-count">5</div>
         </div>
-
         <div class="activity-item">
-          <div class="activity-icon-wrap icon-520" style="background:#1b96ff;">
+          <div class="activity-icon-wrap" style="background:#1b96ff;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"/></svg>
           </div>
-          <div class="activity-item-info">
-            <div class="activity-item-label">Follow-Ups Set</div>
-          </div>
+          <div class="activity-item-info"><div class="activity-item-label">Follow-Ups Set</div></div>
           <div class="activity-item-count">11</div>
         </div>
-
         <div class="activity-item">
-          <div class="activity-icon-wrap icon-520" style="background:#ff538a;">
+          <div class="activity-icon-wrap" style="background:#ff538a;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg>
           </div>
-          <div class="activity-item-info">
-            <div class="activity-item-label">Offers Made</div>
-          </div>
+          <div class="activity-item-info"><div class="activity-item-label">Offers Made</div></div>
           <div class="activity-item-count">2</div>
         </div>
-
       </div>
     </div>
   </div>
@@ -550,16 +591,16 @@
     <!-- LEFT METRICS -->
     <div class="left-metrics">
       <div class="metric-card-blue">
-        <div class="label">Warm Pipeline</div>
-        <div class="value">26</div>
+        <div class="label">Active Leads</div>
+        <div class="value" id="metricTotal">—</div>
       </div>
       <div class="metric-card-white">
-        <div class="label">Untouched Leads</div>
-        <div class="value">55</div>
+        <div class="label">In Negotiation</div>
+        <div class="value" id="metricNegotiation">—</div>
       </div>
       <div class="metric-card-white" style="margin-bottom:0;">
-        <div class="label">Under Contract</div>
-        <div class="value">2</div>
+        <div class="label">Interested in Selling</div>
+        <div class="value" id="metricInterested">—</div>
       </div>
     </div>
 
@@ -571,7 +612,8 @@
         <div class="ai-brief-header">
           <span class="ai-brief-spark">✦</span>
           AI Pipeline Brief
-          <span class="ai-brief-badge">Live</span>
+          <span class="ai-brief-badge" id="briefBadge">Live</span>
+          <span class="ai-brief-date" id="briefDate"></span>
         </div>
         <div class="ai-brief-body" id="aiBriefBody">
           <div class="ai-brief-loading" id="aiBriefLoading">
@@ -580,7 +622,7 @@
           </div>
           <div id="aiBriefText" style="display:none;"></div>
         </div>
-        <button class="ai-brief-refresh" onclick="loadAIBrief()">↻ Refresh Brief</button>
+        <button class="ai-brief-refresh" onclick="loadBriefData()">↻ Refresh Brief</button>
       </div>
     </div>
 
@@ -589,7 +631,7 @@
   <!-- ACTIONS FOR YOU -->
   <div class="actions-section">
     <div class="actions-title">Actions for You</div>
-    <div class="actions-subtitle">5 high-priority suggestions · Sorted by impact</div>
+    <div class="actions-subtitle" id="actionsSubtitle">Loading priority actions…</div>
 
     <div class="actions-header-row">
       <div class="col-label">Suggestion</div>
@@ -598,84 +640,11 @@
       <div class="col-label">Suggested Action</div>
     </div>
 
-    <!-- Row 1: Re-engage High Value Lead — Opportunity #ff5d2d -->
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon" style="background:#ff5d2d;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>
-        </div>
-        <div class="action-info">
-          <div class="action-name">Re-engage High Value Lead</div>
-          <div class="action-subtext">Active Opportunities · Feb 16</div>
-        </div>
+    <div id="actionsContainer">
+      <div class="ai-brief-loading" style="padding: 40px 0;">
+        <div class="ai-brief-spinner"></div>
+        <div class="ai-brief-loading-text">Loading actions…</div>
       </div>
-      <div class="action-related">Hughes Scott Kevin</div>
-      <div><span class="rationale-pill"><span class="rationale-spark">✦</span> Interested, 95 days inactive</span></div>
-      <div><button class="action-btn"><span class="action-btn-spark">✦</span> Re-engage</button></div>
-    </div>
-
-    <!-- Row 2: High Equity Going Cold — Lead (Active Follow-Up) #06a59a -->
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon" style="background:#06a59a;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>
-        </div>
-        <div class="action-info">
-          <div class="action-name">High Equity Lead Going Cold</div>
-          <div class="action-subtext">Active Follow-Up · Jan 19</div>
-        </div>
-      </div>
-      <div class="action-related">Doran Thomas Francis</div>
-      <div><span class="rationale-pill"><span class="rationale-spark">✦</span> $419K equity at risk</span></div>
-      <div><button class="action-btn"><span class="action-btn-spark">✦</span> Re-engage</button></div>
-    </div>
-
-    <!-- Row 3: Overdue Follow-Up — Lead (Active Follow-Up) #06a59a -->
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon" style="background:#06a59a;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>
-        </div>
-        <div class="action-info">
-          <div class="action-name">Overdue Follow-Up</div>
-          <div class="action-subtext">Active Follow-Up · Dec 27</div>
-        </div>
-      </div>
-      <div class="action-related">Wright Ruby Lee Est Of</div>
-      <div><span class="rationale-pill"><span class="rationale-spark">✦</span> Follow-up 46 days overdue</span></div>
-      <div><button class="action-btn"><span class="action-btn-spark">✦</span> Follow Up</button></div>
-    </div>
-
-    <!-- Row 4: Touch Base on Negotiation — Opportunity (Active Opportunities) #ff5d2d -->
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon" style="background:#ff5d2d;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>
-        </div>
-        <div class="action-info">
-          <div class="action-name">Touch Base on Negotiation Terms</div>
-          <div class="action-subtext">Active Opportunities · Dec 26</div>
-        </div>
-      </div>
-      <div class="action-related">Gonzalez Jose L</div>
-      <div><span class="rationale-pill"><span class="rationale-spark">✦</span> Deal stalled in negotiation</span></div>
-      <div><button class="action-btn"><span class="action-btn-spark">✦</span> Resume</button></div>
-    </div>
-
-    <!-- Row 5: Prepare for Scheduled Call — Opportunity (Active Opportunities) #ff5d2d -->
-    <div class="action-row">
-      <div class="action-left">
-        <div class="action-icon" style="background:#ff5d2d;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>
-        </div>
-        <div class="action-info">
-          <div class="action-name">Prepare for Scheduled Call</div>
-          <div class="action-subtext">Active Opportunities · Feb 2</div>
-        </div>
-      </div>
-      <div class="action-related">Holmes Dora Lee Est</div>
-      <div><span class="rationale-pill"><span class="rationale-spark">✦</span> Call in 20 days, $200K equity</span></div>
-      <div><button class="action-btn"><span class="action-btn-spark">✦</span> Prepare</button></div>
     </div>
 
   </div><!-- /actions-section -->
@@ -683,6 +652,147 @@
 </div><!-- /page -->
 
 <script>
+// ── Configuration ──────────────────────────────────────────
+// Make.com GET webhook — returns the latest brief JSON from the Data Store
+const BRIEF_DATA_URL = 'https://hook.us1.make.com/z8p1u6ytdxsr6pu6vt0dmwf7wch82um3';
+
+// ── Icon map by suggested action type ─────────────────────
+const ACTION_CONFIG = {
+  'Re-engage': {
+    color: '#ff5d2d',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>`
+  },
+  'Follow Up': {
+    color: '#06a59a',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>`
+  },
+  'Resume': {
+    color: '#6366f1',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg>`
+  },
+  'Prepare': {
+    color: '#1b96ff',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"/></svg>`
+  },
+  'Review': {
+    color: '#f59e0b',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="M400 60H120C97 60 78 79 78 102v316c0 23 19 42 42 42h280c23 0 42-19 42-42V102c0-23-19-42-42-42zm-20 280H140v-32h240v32zm0-76H140v-32h240v32zm0-76H140v-32h240v32zm0-76H140v-32h240v32z"/></svg>`
+  }
+};
+
+// ── Render pipeline data ───────────────────────────────────
+function renderBriefData(data) {
+  // Update greeting
+  const today = data.date ? formatDate(data.date) : 'today';
+  document.getElementById('topBarSub').textContent = `Here are your priority actions for ${today}.`;
+
+  // Update brief date badge
+  if (data.date) {
+    document.getElementById('briefDate').textContent = data.date;
+  }
+
+  // Update pipeline metrics
+  if (data.pipeline_summary) {
+    document.getElementById('metricTotal').textContent    = data.pipeline_summary.total_active  ?? '—';
+    document.getElementById('metricNegotiation').textContent = data.pipeline_summary.in_negotiation ?? '—';
+    document.getElementById('metricInterested').textContent  = data.pipeline_summary.interested_in_selling ?? '—';
+  }
+
+  // Update AI brief
+  const loading = document.getElementById('aiBriefLoading');
+  const briefText = document.getElementById('aiBriefText');
+  if (data.morning_brief) {
+    briefText.innerHTML = data.morning_brief;
+    loading.style.display = 'none';
+    briefText.style.display = 'block';
+  }
+
+  // Update actions subtitle
+  const count = data.top_actions?.length ?? 0;
+  document.getElementById('actionsSubtitle').textContent =
+    `${count} priority action${count !== 1 ? 's' : ''} identified for ${today}.`;
+
+  // Render action rows
+  const container = document.getElementById('actionsContainer');
+  container.innerHTML = '';
+
+  if (!data.top_actions || data.top_actions.length === 0) {
+    container.innerHTML = '<div class="actions-empty">No priority actions identified for today.</div>';
+    return;
+  }
+
+  data.top_actions.forEach((action, idx) => {
+    const cfg = ACTION_CONFIG[action.suggested_action] || ACTION_CONFIG['Follow Up'];
+
+    const followUpLabel = action.follow_up_date
+      ? `${action.group} · Follow-up: ${action.follow_up_date}`
+      : action.group;
+
+    const row = document.createElement('div');
+    row.className = 'action-row';
+    row.style.animationDelay = `${idx * 0.06}s`;
+    row.style.opacity = '0';
+
+    row.innerHTML = `
+      <div class="action-left">
+        <div class="action-icon" style="background:${cfg.color};">${cfg.svg}</div>
+        <div class="action-info">
+          <div class="action-name">${escapeHtml(action.title)}</div>
+          <div class="action-subtext">${escapeHtml(followUpLabel)}</div>
+        </div>
+      </div>
+      <div class="action-related">${escapeHtml(action.lead_name)}</div>
+      <div>
+        <div class="rationale-hover">
+          <span class="rationale-pill">
+            <span class="rationale-spark">✦</span> Why Today
+          </span>
+          <div class="rationale-hover-card">
+            <div class="rationale-hover-header">
+              <div class="rationale-hover-ai-icon">✦</div>
+              <div class="rationale-hover-title">Why this Matters</div>
+            </div>
+            <div class="rationale-hover-body">
+              <div class="rationale-hover-label"><span>✦</span> Agent Rationale</div>
+              <div class="rationale-hover-text">${escapeHtml(action.why_today)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="action-btn">
+          <span class="action-btn-spark">✦</span> ${escapeHtml(action.suggested_action)}
+        </button>
+      </div>
+    `;
+
+    container.appendChild(row);
+  });
+}
+
+// ── Fetch brief from Make.com GET webhook ─────────────────
+async function loadBriefData() {
+  // Show loading states
+  document.getElementById('aiBriefLoading').style.display = 'flex';
+  document.getElementById('aiBriefText').style.display = 'none';
+  document.getElementById('actionsContainer').innerHTML = `
+    <div class="ai-brief-loading" style="padding:40px 0;">
+      <div class="ai-brief-spinner"></div>
+      <div class="ai-brief-loading-text">Loading actions…</div>
+    </div>`;
+
+  try {
+    const res = await fetch(BRIEF_DATA_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    renderBriefData(data);
+  } catch (err) {
+    // Fallback to demo data if Make.com is unreachable (e.g. CORS during local dev)
+    console.warn('Make.com fetch failed, using demo data:', err.message);
+    renderBriefData(DEMO_DATA);
+  }
+}
+
 // ── Activity Dropdown ──────────────────────────────────────
 function toggleActivity() {
   document.getElementById('activityMenu').classList.toggle('open');
@@ -693,58 +803,83 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// ── AI Pipeline Brief ──────────────────────────────────────
-const PIPELINE_DATA = {
-  totalLeads: 112,
-  activeOpportunities: 10,
-  interestedInSelling: 9,
-  inNegotiation: 1,
-  offerAccepted: 2,
-  underContract: 2,
-  topDeals: [
-    { name: "Doran Thomas Francis", equity: "$419K", status: "Contacted - Discovery", daysInactive: 134, followUp: "Jan 19" },
-    { name: "Miller Martha L", equity: "$261K", status: "Interested In Selling", followUp: "Jan 26" },
-    { name: "Wright Ruby Lee Est Of", equity: "$230K", status: "Contacted - Discovery", daysInactive: 134, followUp: "Dec 27" },
-    { name: "Hughes Scott Kevin", equity: "$204K", status: "Interested In Selling", daysInactive: 95, followUp: "Feb 16" },
-    { name: "Holmes Dora Lee Est", equity: "$200K", status: "Interested In Selling", followUp: "Feb 2" },
-    { name: "Gonzalez Jose L", equity: "$103K", status: "Negotiation/Review", daysInactive: 112, followUp: "Dec 26" }
+// ── Helpers ────────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatDate(dateStr) {
+  try {
+    const d = new Date(dateStr + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  } catch { return dateStr; }
+}
+
+// ── Demo data (last real run — shown until API token is configured) ──────────
+const DEMO_DATA = {
+  "date": "2026-04-14",
+  "morning_brief": "BERRY BENNIE FERRELL ESTATE OF is today's biggest opportunity — multiple heirs have already accepted the offer and the deal sits in Offer Accepted, but the task to send final agreements to the Uzodinmas went overdue yesterday while Kenyatta Lewis still needs to sign by tomorrow, meaning this deal is one step from closing but stalling on paperwork. The biggest risk on the board is ROBERT ZABIEREK, where the single heir at 100% ownership has gone silent for 19 days after a $144K Facebook offer following a 61-day gap with the follow-up date 59 days past due.",
+  "pipeline_summary": {
+    "total_active": 42,
+    "in_negotiation": 5,
+    "interested_in_selling": 9
+  },
+  "top_actions": [
+    {
+      "rank": 1,
+      "title": "Send Final Agreements — BERRY BENNIE FERRELL ESTATE OF",
+      "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
+      "group": "Offer Accepted",
+      "why_today": "The high-priority task to send final agreements to Nneka and Obina Uzodinma was due April 13 (yesterday) and is now overdue, while a second high-priority task requires Kenyatta Lewis's signature by April 15 — both tasks are stalling on an Offer Accepted deal where 12+ heirs are already marked 'Accepted Offer.' In multi-heir estate deals, delayed agreement execution is the #1 cause of deal collapse as heirs cool off, consult attorneys, or change their minds — leaving two concurrent agreement tasks unresolved for more than 24 hours converts a near-certain close into a likely fallout. Send Nneka's agreement to the email she confirmed on March 31, call Kenyatta Lewis directly today to complete his signature, and confirm Obina Uzodinma's receipt and status.",
+      "suggested_action": "Prepare",
+      "follow_up_date": "2026-04-15"
+    },
+    {
+      "rank": 2,
+      "title": "Complete Two Tasks Due Today — SINER PATRICK F ESTATE OF",
+      "lead_name": "SINER PATRICK F ESTATE OF",
+      "group": "Offer Accepted",
+      "why_today": "Two tasks hit their due date today — the Merp Form for the Decedent and the high-priority Seller Info Sheet assigned to Patrick Siner — both required for underwriting while Dakorey and Patrick have already agreed to sell for $90K but the third 33% heir, Oshae Devon Siner, is incarcerated in Harris County (SPN 02468773, Public Defender Eugenia Mendez, 713-274-8863) with no offer made yet. Failing to advance the paperwork today while Oshae remains unreached means the deal cannot close and risks losing the motivated brothers' buy-in as momentum fades. Complete both tasks immediately today, then coordinate with Patrick and Dakorey on reaching Oshae through his public defender to facilitate his agreement.",
+      "suggested_action": "Prepare",
+      "follow_up_date": null
+    },
+    {
+      "rank": 3,
+      "title": "Follow-Up Explicitly Promised Today — REINA QUIROZ",
+      "lead_name": "REINA QUIROZ",
+      "group": "Active Follow-Up",
+      "why_today": "Gustavo Hernandez asked for a callback in one week when last contacted on April 6, making today the explicit re-engagement deadline — the deal notes confirm all 4 owners are 'talking terms,' the ownership map is complete, and an offer was emailed to gus0614.ch@gmail.com. Missing today's callback breaks the commitment made April 6 and risks losing the window where Victor Hernandez has signaled willingness to deed over his share. Call Gustavo today, confirm he received the offer email, ask specifically about Victor's deed transfer decision, and press for a collective family timeline.",
+      "suggested_action": "Follow Up",
+      "follow_up_date": "2026-04-14"
+    },
+    {
+      "rank": 4,
+      "title": "Re-Engage 100% Single Heir with Open Offer — BANUELOS HELEN ESTATE",
+      "lead_name": "BANUELOS HELEN ESTATE",
+      "group": "Active Opportunities",
+      "why_today": "Jorge Banuelos holds 100% confirmed ownership, received a $125K cash offer, and told the team to call back 'in a few weeks' when last contacted February 26 — 47 days have passed and the follow-up date is 28 days overdue. A single 100% heir with an open offer awaiting attorney clearance is the cleanest one-call close in the pipeline, and a 7-week gap risks this deal going cold or being captured by a competing buyer. Call Jorge today referencing the February conversation and the $125K offer, ask for an attorney update, and probe for a decision timeline.",
+      "suggested_action": "Re-engage",
+      "follow_up_date": null
+    },
+    {
+      "rank": 5,
+      "title": "Break Negotiation Stall — ROBERT ZABIEREK",
+      "lead_name": "ROBERT ZABIEREK",
+      "group": "Active Opportunities",
+      "why_today": "Anthony Joseph Zabierek owns 100% of the property (confirmed, ownership map complete) with an active offer of $144K (increased from $141K), has been in Negotiations/Review for 61 days, and the follow-up date is 59 days overdue — the last contact was a Facebook message on March 26 that went unanswered for 19 days. A 100% single-heir deal going silent after a price increase signals either price resistance or disengagement, and without fresh outreach today this deal will age out to Long Term Follow Up. Send a new concise Facebook message today emphasizing speed and certainty of closing, acknowledge the price gap, and propose a brief call to explore whether a creative structure can bridge the $144K–$175K difference.",
+      "suggested_action": "Re-engage",
+      "follow_up_date": null
+    }
   ]
 };
 
-async function loadAIBrief() {
-  const loading = document.getElementById('aiBriefLoading');
-  const text = document.getElementById('aiBriefText');
-  loading.style.display = 'flex';
-  text.style.display = 'none';
-
-  const prompt = `You are a sales coach for a real estate wholesaling business. Write a 2-sentence morning pipeline brief for a rep named Javon. Be direct and specific — use actual names and numbers. No bullet points, no headers.
-
-Pipeline: ${PIPELINE_DATA.totalLeads} total leads, ${PIPELINE_DATA.activeOpportunities} active opportunities, ${PIPELINE_DATA.interestedInSelling} interested in selling, ${PIPELINE_DATA.inNegotiation} in negotiation, ${PIPELINE_DATA.offerAccepted} offer accepted. Top deals: ${PIPELINE_DATA.topDeals.map(d => `${d.name} (${d.equity}${d.daysInactive ? ', ' + d.daysInactive + 'd inactive' : ''})`).join(', ')}.`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await response.json();
-    const brief = data.content?.[0]?.text || 'Unable to load brief.';
-    text.innerHTML = brief;
-    loading.style.display = 'none';
-    text.style.display = 'block';
-  } catch (err) {
-    text.innerHTML = 'Unable to load brief. Check your connection.';
-    loading.style.display = 'none';
-    text.style.display = 'block';
-  }
-}
-
-// Auto-load on page open
-loadAIBrief();
+// ── Init ───────────────────────────────────────────────────
+loadBriefData();
 </script>
 </body>
 </html>
