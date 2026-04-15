@@ -73,7 +73,6 @@
   .left-metrics {
     display: flex;
     flex-direction: column;
-    gap: 0;
     padding: 24px 24px 24px 24px;
     width: 290px;
     flex-shrink: 0;
@@ -85,9 +84,10 @@
   .metric-card-blue {
     background: #2563eb;
     border-radius: 10px;
-    padding: 18px 20px 20px 20px;
+    padding: 18px 20px;
     color: #fff;
     margin-bottom: 14px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -112,8 +112,9 @@
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-    padding: 16px 20px 18px 20px;
+    padding: 16px 20px;
     margin-bottom: 12px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -147,11 +148,11 @@
     background: #fff;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
-    padding: 16px;
+    padding: 18px 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
   }
   .ai-brief-header {
     display: flex;
@@ -185,7 +186,7 @@
     justify-content: center;
     flex: 1;
     gap: 10px;
-    padding: 12px 0;
+    padding: 8px 0;
   }
   .ai-brief-spinner {
     width: 22px; height: 22px;
@@ -197,28 +198,45 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .ai-brief-loading-text { font-size: 13px; color: #9ca3af; }
   .ai-brief-body {
-    font-size: 13.5px;
+    font-size: 13px;
     color: #374151;
-    line-height: 1.6;
+    line-height: 1.55;
     flex: 1;
   }
   .ai-brief-body strong { color: #111827; font-weight: 600; }
-  .ai-brief-refresh {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    font-size: 13px;
-    color: #6366f1;
-    font-weight: 400 !important;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    border: none;
-    background: none;
-    width: 100%;
+
+  /* ACTIVITY DROPDOWN */
+  .activity-dropdown { position: relative; display: inline-block; }
+  .activity-pill {
+    display: flex; align-items: center; gap: 7px;
+    border: 1px solid #d1d5db; border-radius: 999px;
+    padding: 7px 14px; font-size: 14px; color: #374151;
+    background: #fff; cursor: pointer; white-space: nowrap; user-select: none;
   }
-  .ai-brief-refresh:hover { background: #f5f3ff; }
+  .activity-pill:hover { background: #f9fafb; }
+  .activity-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
+  .activity-pill-caret { font-size: 10px; color: #9ca3af; margin-left: 2px; transition: transform 0.2s; }
+  .activity-pill-caret.open { transform: rotate(180deg); }
+  .activity-menu {
+    display: none; position: absolute; right: 0; top: calc(100% + 6px);
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10); min-width: 280px; z-index: 100; padding: 14px 0 8px 0;
+  }
+  .activity-menu.open { display: block; }
+  .activity-menu-title {
+    font-size: 12px; font-weight: 600; color: #122349; text-transform: uppercase;
+    letter-spacing: 0.07em; padding: 0 16px 10px 16px; border-bottom: 1px solid #f3f4f6; margin-bottom: 6px;
+  }
+  .activity-item { display: flex; align-items: center; gap: 12px; padding: 9px 16px; }
+  .activity-item:hover { background: #f9fafb; }
+  .activity-icon-wrap { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+  .activity-icon-wrap svg { width: 62%; height: 62%; display: block; margin: auto; }
+  .activity-item-info { flex: 1; }
+  .activity-item-label { font-size: 12.5px; font-weight: 400; color: #111827; }
+  .activity-item-count {
+    font-size: 14px; font-weight: 600; color: #6b7280;
+    background: #f8f5ff; border: 1.5px solid #e8e0f5; border-radius: 6px; padding: 3px 10px; flex-shrink: 0;
+  }
 
   /* ACTIONS FOR YOU */
   .actions-section {
@@ -229,26 +247,26 @@
     padding: 26px 30px 12px 30px;
   }
   .actions-title {
-    font-size: 18px;
+    font-size: 19.5px;
     font-weight: 600;
     color: #122349;
     margin-bottom: 4px;
   }
   .actions-subtitle {
-    font-size: 14px;
+    font-size: 15px;
     color: #6b7280;
     margin-bottom: 18px;
   }
   .actions-header-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.4fr 1fr;
+    grid-template-columns: 2fr 1.2fr 1.2fr 1fr;
     align-items: center;
-    padding: 0 0 8px 0;
+    padding: 0 30px 8px 30px;
     border-bottom: 1px solid #e5e7eb;
-    margin-bottom: 4px;
+    margin: 0 -30px 4px -30px;
   }
   .col-label {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: #9aa3af;
     text-transform: uppercase;
@@ -256,11 +274,15 @@
   }
   .action-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1.4fr 1fr;
+    grid-template-columns: 2fr 1.2fr 1.2fr 1fr;
     align-items: center;
-    padding: 18px 0;
+    padding: 18px 8px;
     border-bottom: 1px solid #f3f4f6;
-    animation: fadeIn 0.22s ease forwards;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+  }
+  .action-row:hover {
+    background: #eff6ff;
   }
   .action-row:last-child { border-bottom: none; }
   @keyframes fadeIn {
@@ -273,7 +295,7 @@
     gap: 14px;
   }
   .action-icon {
-    width: 34px; height: 34px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -282,27 +304,33 @@
     overflow: hidden;
   }
   .action-icon svg {
-    width: 58%;
-    height: 58%;
+    width: 66%;
+    height: 66%;
     flex-shrink: 0;
     display: block;
     margin: auto;
   }
+  /* Crown/trophy (Re-engage) and Follow Up star have larger viewBoxes — boost them */
+  .action-icon.icon-reengage svg,
+  .action-icon.icon-followup svg {
+    width: 82%;
+    height: 82%;
+  }
   .action-info {}
   .action-name {
-    font-size: 14px;
+    font-size: 15.5px;
     font-weight: 600;
     color: #111827;
     margin-bottom: 2px;
   }
   .action-subtext {
-    font-size: 13px;
+    font-size: 14px;
     color: #6b7280;
   }
 
   /* Related To column */
   .action-related {
-    font-size: 14px;
+    font-size: 15px;
     color: #1048a8;
     font-weight: 400 !important;
   }
@@ -319,17 +347,24 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    border: 1.5px solid #e0e8e2;
+    border: 1.5px solid #dbeafe;
     border-radius: 6px;
     padding: 5px 12px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 400 !important;
     color: #374151;
-    background: #f7faf8;
+    background: #f0f5ff;
     white-space: nowrap;
     cursor: default;
   }
-  .rationale-spark { font-size: 14px; color: #6366f1; }
+  .rationale-spark { font-size: 14px; color: #6366f1; display: none; }
+  .spark-svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
 
   /* Suggested Action pill button (restored) */
   .action-btn {
@@ -339,7 +374,7 @@
     border: 1.5px solid #6b7280;
     border-radius: 999px;
     padding: 7px 18px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     color: #1d4ed8;
     background: #fff;
@@ -351,18 +386,16 @@
   .action-btn:hover { background: #eff6ff; border-color: #374151; }
   .action-btn-spark { font-size: 12px; color: #1d4ed8; }
 
-  /* AI brief opportunity/risk split */
   .ai-brief-split {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
   }
   .ai-brief-section-label {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: 3px;
   }
   .ai-brief-opp-label { color: #10b981; }
   .ai-brief-risk-label { color: #ef4444; }
@@ -370,10 +403,14 @@
     font-size: 13px;
     font-weight: 600;
     color: #1a1a2e;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
   }
   .ai-brief-section-text {
-    font-size: 13.5px;
+    font-size: 12.5px;
     line-height: 1.6;
     color: #374151;
   }
@@ -383,84 +420,15 @@
     margin: 0;
   }
 
-  /* ACTIVITY DROPDOWN */
-  .activity-dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  .activity-pill {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid #d1d5db;
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 14px;
-    color: #374151;
-    background: #fff;
-    cursor: pointer;
-    white-space: nowrap;
-    user-select: none;
-  }
-  .activity-pill:hover { background: #f9fafb; }
-  .activity-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
-  .activity-pill-caret { font-size: 10px; color: #9ca3af; margin-left: 2px; }
-  .activity-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: calc(100% + 6px);
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-    min-width: 280px;
-    z-index: 100;
-    padding: 14px 0 8px 0;
-  }
-  .activity-menu.open { display: block; }
-  .activity-menu-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: #122349;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    padding: 0 16px 10px 16px;
-    border-bottom: 1px solid #f3f4f6;
-    margin-bottom: 6px;
-  }
-  .activity-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 16px;
-  }
-  .activity-item:hover { background: #f9fafb; }
-  .activity-icon-wrap {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-  .activity-icon-wrap svg { width: 62%; height: 62%; display: block; margin: auto; }
-  .activity-item-info { flex: 1; }
-  .activity-item-label { font-size: 12.5px; font-weight: 400; color: #111827; }
-  .activity-item-count {
-    font-size: 14px;
-    font-weight: 600;
-    color: #6b7280;
-    background: #f8f5ff;
-    border: 1.5px solid #e8e0f5;
-    border-radius: 6px;
-    padding: 3px 10px;
-    flex-shrink: 0;
-  }
 
   /* AGENT RATIONALE HOVER CARD */
   .rationale-hover {
     position: relative;
     display: inline-block;
+    z-index: 10;
+  }
+  .rationale-hover:hover {
+    z-index: 1000;
   }
   .rationale-hover-card {
     position: absolute;
@@ -476,7 +444,7 @@
     visibility: hidden;
     pointer-events: none;
     transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
-    z-index: 200;
+    z-index: 1000;
     overflow: visible;
   }
   .rationale-hover:hover .rationale-hover-card,
@@ -512,10 +480,14 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(145deg, #2563eb 0%, #7c3aed 100%);
-    color: #fff;
-    font-size: 13px;
     box-shadow: 0 6px 14px rgba(99, 102, 241, 0.24);
     flex-shrink: 0;
+    padding: 6px;
+  }
+  .rationale-hover-ai-icon .spark-svg {
+    width: 100%;
+    height: 100%;
+    filter: brightness(0) invert(1);
   }
   .rationale-hover-title {
     font-size: 15px;
@@ -547,6 +519,70 @@
     color: #475569;
   }
 
+  /* ACTIVITY WIDGET (inside left metrics) */
+  .activity-widget {
+    margin-top: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .activity-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+    background: #f8faff;
+    border-bottom: 1px solid #e5e7eb;
+    user-select: none;
+  }
+  .activity-widget-header:hover { background: #eff6ff; }
+  .activity-widget-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .activity-pill-caret { font-size: 10px; color: #9ca3af; transition: transform 0.2s; }
+  .activity-pill-caret.open { transform: rotate(180deg); }
+  .activity-widget-rows {
+    display: none;
+  }
+  .activity-widget-rows.open { display: block; }
+  .activity-widget-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .activity-widget-icon {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .activity-widget-icon svg { width: 55%; height: 55%; display: block; margin: auto; }
+  .activity-widget-label {
+    flex: 1;
+    font-size: 12px;
+    color: #374151;
+  }
+  .activity-widget-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a2e;
+    background: #f0f5ff;
+    border: 1px solid #dbeafe;
+    border-radius: 6px;
+    padding: 2px 9px;
+  }
+
   /* EMPTY STATE */
   .actions-empty {
     text-align: center;
@@ -576,45 +612,15 @@
       <div class="activity-pill" onclick="toggleActivity()">
         <div class="activity-pill-dot"></div>
         Last 2 Weeks Activity
-        <span class="activity-pill-caret">▾</span>
+        <span class="activity-pill-caret" id="activityCaret">▾</span>
       </div>
       <div class="activity-menu" id="activityMenu">
         <div class="activity-menu-title">Your Activity · Last 14 Days</div>
-        <div class="activity-item">
-          <div class="activity-icon-wrap" style="background:#06a59a;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>
-          </div>
-          <div class="activity-item-info"><div class="activity-item-label">New Leads Added</div></div>
-          <div class="activity-item-count">14</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon-wrap" style="background:#3ba755;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m485 378-61-49a39 39 0 0 0-48-1l-52 38c-6 5-15 4-21-2l-78-70-70-78c-6-6-6-14-2-21l38-52c11-14 10-34-1-48l-49-61a40 40 0 0 0-59-3L32 83c-8 8-12 20-12 31 5 102 51 199 119 267s165 114 267 119c11 1 22-4 30-12l52-52c17-16 16-44-3-58z"/></svg>
-          </div>
-          <div class="activity-item-info"><div class="activity-item-label">Conversations Started</div></div>
-          <div class="activity-item-count">8</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon-wrap" style="background:#ff5d2d;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>
-          </div>
-          <div class="activity-item-info"><div class="activity-item-label">Pipeline Movement</div></div>
-          <div class="activity-item-count">5</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon-wrap" style="background:#1b96ff;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"/></svg>
-          </div>
-          <div class="activity-item-info"><div class="activity-item-label">Follow-Ups Set</div></div>
-          <div class="activity-item-count">11</div>
-        </div>
-        <div class="activity-item">
-          <div class="activity-icon-wrap" style="background:#ff538a;">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg>
-          </div>
-          <div class="activity-item-info"><div class="activity-item-label">Offers Made</div></div>
-          <div class="activity-item-count">2</div>
-        </div>
+        <div class="activity-item"><div class="activity-icon-wrap" style="background:#06a59a;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg></div><div class="activity-item-info"><div class="activity-item-label">New Leads Added</div></div><div class="activity-item-count">14</div></div>
+        <div class="activity-item"><div class="activity-icon-wrap" style="background:#3ba755;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m485 378-61-49a39 39 0 0 0-48-1l-52 38c-6 5-15 4-21-2l-78-70-70-78c-6-6-6-14-2-21l38-52c11-14 10-34-1-48l-49-61a40 40 0 0 0-59-3L32 83c-8 8-12 20-12 31 5 102 51 199 119 267s165 114 267 119c11 1 22-4 30-12l52-52c17-16 16-44-3-58z"/></svg></div><div class="activity-item-info"><div class="activity-item-label">Conversations Started</div></div><div class="activity-item-count">8</div></div>
+        <div class="activity-item"><div class="activity-icon-wrap" style="background:#ff5d2d;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg></div><div class="activity-item-info"><div class="activity-item-label">Pipeline Movement</div></div><div class="activity-item-count">5</div></div>
+        <div class="activity-item"><div class="activity-icon-wrap" style="background:#1b96ff;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"/></svg></div><div class="activity-item-info"><div class="activity-item-label">Follow-Ups Set</div></div><div class="activity-item-count">11</div></div>
+        <div class="activity-item"><div class="activity-icon-wrap" style="background:#ff538a;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg></div><div class="activity-item-info"><div class="activity-item-label">Offers Made</div></div><div class="activity-item-count">2</div></div>
       </div>
     </div>
   </div>
@@ -662,7 +668,7 @@
             </div>
           </div>
         </div>
-        <button class="ai-brief-refresh" onclick="loadBriefData()">↻ Refresh Brief</button>
+        <button class="ai-brief-refresh" onclick="loadBriefData()" style="display:none;">↻ Refresh Brief</button>
       </div>
     </div>
 
@@ -700,22 +706,27 @@ const BRIEF_DATA_URL = 'https://hook.us1.make.com/z8p1u6ytdxsr6pu6vt0dmwf7wch82u
 const ACTION_CONFIG = {
   'Re-engage': {
     color: '#ff5d2d',
+    iconClass: 'icon-reengage',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"/></svg>`
   },
   'Follow Up': {
     color: '#06a59a',
+    iconClass: 'icon-followup',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="#fff"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"/><circle cx="500" cy="290" r="90"/></svg>`
   },
   'Resume': {
     color: '#6366f1',
+    iconClass: '',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg>`
   },
   'Prepare': {
     color: '#1b96ff',
+    iconClass: '',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"/></svg>`
   },
   'Review': {
     color: '#f59e0b',
+    iconClass: '',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="M400 60H120C97 60 78 79 78 102v316c0 23 19 42 42 42h280c23 0 42-19 42-42V102c0-23-19-42-42-42zm-20 280H140v-32h240v32zm0-76H140v-32h240v32zm0-76H140v-32h240v32zm0-76H140v-32h240v32z"/></svg>`
   }
 };
@@ -746,15 +757,13 @@ function renderBriefData(data) {
   if (opp || risk) {
     if (opp) {
       oppEl.innerHTML = `
-        <div class="ai-brief-section-label ai-brief-opp-label">▲ Best Opportunity</div>
-        <div class="ai-brief-section-name">${escapeHtml(opp.lead_name)}</div>
+        <div class="ai-brief-section-name"><span class="ai-brief-opp-label">▲ Best Opportunity</span> &nbsp;${escapeHtml(opp.lead_name)}</div>
         <div class="ai-brief-section-text">${opp.summary}</div>`;
     }
     if (risk) {
       if (opp) divider.style.display = '';
       riskEl.innerHTML = `
-        <div class="ai-brief-section-label ai-brief-risk-label">▼ Biggest Risk</div>
-        <div class="ai-brief-section-name">${escapeHtml(risk.lead_name)}</div>
+        <div class="ai-brief-section-name"><span class="ai-brief-risk-label">▼ Biggest Risk</span> &nbsp;${escapeHtml(risk.lead_name)}</div>
         <div class="ai-brief-section-text">${risk.summary}</div>`;
     }
     loading.style.display = 'none';
@@ -800,12 +809,13 @@ function renderBriefData(data) {
 
     const row = document.createElement('div');
     row.className = 'action-row';
-    row.style.animationDelay = `${idx * 0.06}s`;
-    row.style.opacity = '0';
+
+
+    const sparkSvg = `<svg class="spark-svg" viewBox="0 0 400 364" xmlns="http://www.w3.org/2000/svg"><path d="M144.787 19.859 C 144.677 20.047,144.476 21.019,144.339 22.020 C 141.265 44.513,120.997 64.642,98.180 67.862 C 95.911 68.183,95.985 68.634,98.360 68.949 C 120.782 71.924,141.059 92.123,144.328 114.741 C 144.678 117.161,145.033 116.898,145.558 113.831 C 148.428 97.060,160.143 81.667,175.938 73.910 C 181.200 71.326,189.415 68.790,192.523 68.790 C 194.487 68.790,192.852 68.133,189.104 67.416 C 167.704 63.322,149.213 44.567,145.627 23.317 C 145.274 21.228,144.896 19.672,144.787 19.859 M251.501 76.716 C 251.501 77.665,250.011 87.110,249.319 90.551 C 238.941 142.109,193.318 184.745,140.572 192.176 C 135.288 192.920,134.656 193.114,136.542 193.413 C 137.213 193.519,139.481 193.872,141.583 194.197 C 197.876 202.911,243.768 249.319,250.799 304.641 C 251.346 308.949,251.719 309.772,252.029 307.356 C 258.947 253.418,297.618 209.938,350.682 196.436 C 355.414 195.231,357.614 194.817,365.787 193.586 L 368.881 193.121 367.243 192.848 C 366.342 192.698,363.394 192.229,360.692 191.804 C 305.068 183.070,259.905 136.856,252.389 80.983 C 251.879 77.194,251.501 75.378,251.501 76.716 M95.215 214.741 C 95.094 215.241,94.514 217.944,93.926 220.746 C 87.771 250.053,64.064 272.937,33.705 278.875 C 29.242 279.749,29.299 279.852,34.759 280.770 C 64.269 285.734,89.953 312.247,94.813 342.764 C 95.227 345.367,95.588 344.835,96.418 340.390 C 102.029 310.345,127.957 284.934,157.416 280.610 C 162.695 279.835,162.565 279.646,155.960 278.495 C 126.845 273.420,102.772 249.546,96.630 219.654 C 95.812 215.672,95.365 214.118,95.215 214.741" fill="#0543f5"/></svg>`;
 
     row.innerHTML = `
       <div class="action-left">
-        <div class="action-icon" style="background:${cfg.color};">${cfg.svg}</div>
+        <div class="action-icon ${cfg.iconClass || ''}" style="background:${cfg.color};">${cfg.svg}</div>
         <div class="action-info">
           <div class="action-name">${escapeHtml(action.title)}</div>
           <div class="action-subtext">${escapeHtml(followUpLabel)}</div>
@@ -815,15 +825,15 @@ function renderBriefData(data) {
       <div>
         <div class="rationale-hover">
           <span class="rationale-pill">
-            <span class="rationale-spark">✦</span> ${escapeHtml(pillLabel)}
+            ${sparkSvg} ${escapeHtml(pillLabel)}
           </span>
           <div class="rationale-hover-card">
             <div class="rationale-hover-header">
-              <div class="rationale-hover-ai-icon">✦</div>
+              <div class="rationale-hover-ai-icon">${sparkSvg}</div>
               <div class="rationale-hover-title">${escapeHtml(pillLabel)}</div>
             </div>
             <div class="rationale-hover-body">
-              <div class="rationale-hover-label"><span>✦</span> Agent Rationale</div>
+              <div class="rationale-hover-label">${sparkSvg} Agent Rationale</div>
               <div class="rationale-hover-text">${escapeHtml(rationaleText)}</div>
             </div>
           </div>
@@ -831,7 +841,7 @@ function renderBriefData(data) {
       </div>
       <div>
         <button class="action-btn">
-          <span class="action-btn-spark">✦</span> ${escapeHtml(action.suggested_action || 'Review')}
+          ${sparkSvg} ${escapeHtml(action.suggested_action || 'Review')}
         </button>
       </div>
     `;
@@ -866,10 +876,13 @@ async function loadBriefData() {
 // ── Activity Dropdown ──────────────────────────────────────
 function toggleActivity() {
   document.getElementById('activityMenu').classList.toggle('open');
+  document.getElementById('activityCaret').classList.toggle('open');
 }
 document.addEventListener('click', function(e) {
-  if (!document.getElementById('activityDropdown').contains(e.target)) {
+  const dd = document.getElementById('activityDropdown');
+  if (dd && !dd.contains(e.target)) {
     document.getElementById('activityMenu').classList.remove('open');
+    document.getElementById('activityCaret').classList.remove('open');
   }
 });
 
