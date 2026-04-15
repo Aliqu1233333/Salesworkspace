@@ -305,12 +305,14 @@
     font-size: 14px;
     color: #1048a8;
     font-weight: 400 !important;
-    cursor: pointer;
+  }
+  .action-related a {
+    color: #1048a8;
     text-decoration: underline;
     text-decoration-style: dotted;
     text-underline-offset: 3px;
   }
-  .action-related:hover { text-decoration-style: solid; }
+  .action-related a:hover { text-decoration-style: solid; }
 
   /* Agent Rationale pill */
   .rationale-pill {
@@ -329,7 +331,7 @@
   }
   .rationale-spark { font-size: 14px; color: #6366f1; }
 
-  /* Suggested Action pill button */
+  /* Suggested Action pill button (restored) */
   .action-btn {
     display: inline-flex;
     align-items: center;
@@ -348,6 +350,38 @@
   }
   .action-btn:hover { background: #eff6ff; border-color: #374151; }
   .action-btn-spark { font-size: 12px; color: #1d4ed8; }
+
+  /* AI brief opportunity/risk split */
+  .ai-brief-split {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ai-brief-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+  .ai-brief-opp-label { color: #10b981; }
+  .ai-brief-risk-label { color: #ef4444; }
+  .ai-brief-section-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+  }
+  .ai-brief-section-text {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #374151;
+  }
+  .ai-brief-divider {
+    border: none;
+    border-top: 1px solid #eef2f7;
+    margin: 0;
+  }
 
   /* ACTIVITY DROPDOWN */
   .activity-dropdown {
@@ -620,7 +654,13 @@
             <div class="ai-brief-spinner"></div>
             <div class="ai-brief-loading-text">Analyzing your pipeline…</div>
           </div>
-          <div id="aiBriefText" style="display:none;"></div>
+          <div id="aiBriefText" style="display:none;">
+            <div class="ai-brief-split">
+              <div id="aiBriefOpportunity"></div>
+              <hr class="ai-brief-divider" id="aiBriefDivider" style="display:none;">
+              <div id="aiBriefRisk"></div>
+            </div>
+          </div>
         </div>
         <button class="ai-brief-refresh" onclick="loadBriefData()">↻ Refresh Brief</button>
       </div>
@@ -656,7 +696,7 @@
 // Make.com GET webhook — returns the latest brief JSON from the Data Store
 const BRIEF_DATA_URL = 'https://hook.us1.make.com/z8p1u6ytdxsr6pu6vt0dmwf7wch82um3';
 
-// ── Icon map by suggested action type ─────────────────────
+// ── Icon map by suggested action type (original approved colors) ───────────
 const ACTION_CONFIG = {
   'Re-engage': {
     color: '#ff5d2d',
@@ -682,32 +722,51 @@ const ACTION_CONFIG = {
 
 // ── Render pipeline data ───────────────────────────────────
 function renderBriefData(data) {
-  // Update greeting
   const today = data.date ? formatDate(data.date) : 'today';
   document.getElementById('topBarSub').textContent = `Here are your priority actions for ${today}.`;
+  if (data.date) document.getElementById('briefDate').textContent = data.date;
 
-  // Update brief date badge
-  if (data.date) {
-    document.getElementById('briefDate').textContent = data.date;
-  }
-
-  // Update pipeline metrics
+  // Pipeline metrics
   if (data.pipeline_summary) {
-    document.getElementById('metricTotal').textContent    = data.pipeline_summary.total_active  ?? '—';
+    document.getElementById('metricTotal').textContent       = data.pipeline_summary.total_active ?? '—';
     document.getElementById('metricNegotiation').textContent = data.pipeline_summary.in_negotiation ?? '—';
     document.getElementById('metricInterested').textContent  = data.pipeline_summary.interested_in_selling ?? '—';
   }
 
-  // Update AI brief
-  const loading = document.getElementById('aiBriefLoading');
+  // AI Brief — best opportunity + biggest risk
+  const loading   = document.getElementById('aiBriefLoading');
   const briefText = document.getElementById('aiBriefText');
-  if (data.morning_brief) {
-    briefText.innerHTML = data.morning_brief;
+  const oppEl     = document.getElementById('aiBriefOpportunity');
+  const riskEl    = document.getElementById('aiBriefRisk');
+  const divider   = document.getElementById('aiBriefDivider');
+
+  const opp  = data.best_opportunity;
+  const risk = data.biggest_risk;
+
+  if (opp || risk) {
+    if (opp) {
+      oppEl.innerHTML = `
+        <div class="ai-brief-section-label ai-brief-opp-label">▲ Best Opportunity</div>
+        <div class="ai-brief-section-name">${escapeHtml(opp.lead_name)}</div>
+        <div class="ai-brief-section-text">${opp.summary}</div>`;
+    }
+    if (risk) {
+      if (opp) divider.style.display = '';
+      riskEl.innerHTML = `
+        <div class="ai-brief-section-label ai-brief-risk-label">▼ Biggest Risk</div>
+        <div class="ai-brief-section-name">${escapeHtml(risk.lead_name)}</div>
+        <div class="ai-brief-section-text">${risk.summary}</div>`;
+    }
+    loading.style.display = 'none';
+    briefText.style.display = 'block';
+  } else if (data.morning_brief) {
+    // Fallback: legacy single-brief format
+    oppEl.innerHTML = `<div class="ai-brief-section-text">${data.morning_brief}</div>`;
     loading.style.display = 'none';
     briefText.style.display = 'block';
   }
 
-  // Update actions subtitle
+  // Actions subtitle
   const count = data.top_actions?.length ?? 0;
   document.getElementById('actionsSubtitle').textContent =
     `${count} priority action${count !== 1 ? 's' : ''} identified for ${today}.`;
@@ -722,11 +781,22 @@ function renderBriefData(data) {
   }
 
   data.top_actions.forEach((action, idx) => {
+    // Original approved icon colors keyed to suggested_action
     const cfg = ACTION_CONFIG[action.suggested_action] || ACTION_CONFIG['Follow Up'];
 
     const followUpLabel = action.follow_up_date
-      ? `${action.group} · Follow-up: ${action.follow_up_date}`
+      ? `${action.group} · ${action.follow_up_date}`
       : action.group;
+
+    const relatedHtml = action.lead_url
+      ? `<a href="${escapeHtml(action.lead_url)}" target="_blank">${escapeHtml(action.lead_name)}</a>`
+      : escapeHtml(action.lead_name);
+
+    // rationale field (new) with fallback to why_today (old)
+    const rationaleText = action.rationale || action.why_today || '';
+
+    // disposition_label shown in the pill instead of "Agent Rationale"
+    const pillLabel = action.disposition_label || 'Agent Rationale';
 
     const row = document.createElement('div');
     row.className = 'action-row';
@@ -741,27 +811,27 @@ function renderBriefData(data) {
           <div class="action-subtext">${escapeHtml(followUpLabel)}</div>
         </div>
       </div>
-      <div class="action-related">${escapeHtml(action.lead_name)}</div>
+      <div class="action-related">${relatedHtml}</div>
       <div>
         <div class="rationale-hover">
           <span class="rationale-pill">
-            <span class="rationale-spark">✦</span> Why Today
+            <span class="rationale-spark">✦</span> ${escapeHtml(pillLabel)}
           </span>
           <div class="rationale-hover-card">
             <div class="rationale-hover-header">
               <div class="rationale-hover-ai-icon">✦</div>
-              <div class="rationale-hover-title">Why this Matters</div>
+              <div class="rationale-hover-title">${escapeHtml(pillLabel)}</div>
             </div>
             <div class="rationale-hover-body">
               <div class="rationale-hover-label"><span>✦</span> Agent Rationale</div>
-              <div class="rationale-hover-text">${escapeHtml(action.why_today)}</div>
+              <div class="rationale-hover-text">${escapeHtml(rationaleText)}</div>
             </div>
           </div>
         </div>
       </div>
       <div>
         <button class="action-btn">
-          <span class="action-btn-spark">✦</span> ${escapeHtml(action.suggested_action)}
+          <span class="action-btn-spark">✦</span> ${escapeHtml(action.suggested_action || 'Review')}
         </button>
       </div>
     `;
@@ -820,10 +890,17 @@ function formatDate(dateStr) {
   } catch { return dateStr; }
 }
 
-// ── Demo data (last real run — shown until API token is configured) ──────────
+// ── Demo data (last real run — live until Make.com responds) ─────────────────
 const DEMO_DATA = {
   "date": "2026-04-14",
-  "morning_brief": "BERRY BENNIE FERRELL ESTATE OF is today's biggest opportunity — multiple heirs have already accepted the offer and the deal sits in Offer Accepted, but the task to send final agreements to the Uzodinmas went overdue yesterday while Kenyatta Lewis still needs to sign by tomorrow, meaning this deal is one step from closing but stalling on paperwork. The biggest risk on the board is ROBERT ZABIEREK, where the single heir at 100% ownership has gone silent for 19 days after a $144K Facebook offer following a 61-day gap with the follow-up date 59 days past due.",
+  "best_opportunity": {
+    "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
+    "summary": "12+ heirs already marked Accepted Offer and the deal is in Offer Accepted — but two agreement tasks are stalling the close. Send Nneka Uzodinma's agreement today (overdue since Apr 13th) and call Kenyatta Lewis to get his signature by Apr 15th. One day of paperwork delay on a multi-heir deal is all it takes for someone to change their mind."
+  },
+  "biggest_risk": {
+    "lead_name": "ROBERT ZABIEREK",
+    "summary": "Anthony Joseph holds 100% ownership (confirmed, map complete) with a $144K offer on the table — and has gone silent for 19 days after the last Facebook message. 61 days in Negotiations/Review with a follow-up 59 days overdue. Without outreach today this moves to Long Term Follow Up and momentum dies."
+  },
   "pipeline_summary": {
     "total_active": 42,
     "in_negotiation": 5,
@@ -832,46 +909,56 @@ const DEMO_DATA = {
   "top_actions": [
     {
       "rank": 1,
-      "title": "Send Final Agreements — BERRY BENNIE FERRELL ESTATE OF",
+      "title": "Send Overdue Agreements",
       "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/",
       "group": "Offer Accepted",
-      "why_today": "The high-priority task to send final agreements to Nneka and Obina Uzodinma was due April 13 (yesterday) and is now overdue, while a second high-priority task requires Kenyatta Lewis's signature by April 15 — both tasks are stalling on an Offer Accepted deal where 12+ heirs are already marked 'Accepted Offer.' In multi-heir estate deals, delayed agreement execution is the #1 cause of deal collapse as heirs cool off, consult attorneys, or change their minds — leaving two concurrent agreement tasks unresolved for more than 24 hours converts a near-certain close into a likely fallout. Send Nneka's agreement to the email she confirmed on March 31, call Kenyatta Lewis directly today to complete his signature, and confirm Obina Uzodinma's receipt and status.",
+      "disposition_label": "Prioritize Closing",
+      "rationale": "2 agreement tasks overdue — Nneka Uzodinma since Apr 13th, Kenyatta Lewis due Apr 15th. 12+ heirs aligned. Every day of delay risks a change of heart. Send Nneka's agreement now, call Kenyatta directly.",
       "suggested_action": "Prepare",
-      "follow_up_date": "2026-04-15"
+      "follow_up_date": "Apr 15th"
     },
     {
       "rank": 2,
-      "title": "Complete Two Tasks Due Today — SINER PATRICK F ESTATE OF",
+      "title": "Complete Today's Tasks",
       "lead_name": "SINER PATRICK F ESTATE OF",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/",
       "group": "Offer Accepted",
-      "why_today": "Two tasks hit their due date today — the Merp Form for the Decedent and the high-priority Seller Info Sheet assigned to Patrick Siner — both required for underwriting while Dakorey and Patrick have already agreed to sell for $90K but the third 33% heir, Oshae Devon Siner, is incarcerated in Harris County (SPN 02468773, Public Defender Eugenia Mendez, 713-274-8863) with no offer made yet. Failing to advance the paperwork today while Oshae remains unreached means the deal cannot close and risks losing the motivated brothers' buy-in as momentum fades. Complete both tasks immediately today, then coordinate with Patrick and Dakorey on reaching Oshae through his public defender to facilitate his agreement.",
+      "disposition_label": "Missing Next Steps",
+      "rationale": "Merp Form + Seller Info Sheet both due today. Patrick & Dakorey agreed at $90K but 3rd heir Oshae (33%) is incarcerated — SPN 02468773, Public Defender 713-274-8863. Can't close without him.",
       "suggested_action": "Prepare",
-      "follow_up_date": null
+      "follow_up_date": "Apr 14th"
     },
     {
       "rank": 3,
-      "title": "Follow-Up Explicitly Promised Today — REINA QUIROZ",
+      "title": "Honor Apr 14th Callback",
       "lead_name": "REINA QUIROZ",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/",
       "group": "Active Follow-Up",
-      "why_today": "Gustavo Hernandez asked for a callback in one week when last contacted on April 6, making today the explicit re-engagement deadline — the deal notes confirm all 4 owners are 'talking terms,' the ownership map is complete, and an offer was emailed to gus0614.ch@gmail.com. Missing today's callback breaks the commitment made April 6 and risks losing the window where Victor Hernandez has signaled willingness to deed over his share. Call Gustavo today, confirm he received the offer email, ask specifically about Victor's deed transfer decision, and press for a collective family timeline.",
+      "disposition_label": "Follow Up Today",
+      "rationale": "Gustavo asked for a callback in one week on Apr 6th — that's today. All 4 owners talking terms, ownership map complete, offer emailed. Victor Hernandez signaled willingness to deed his share. Call now.",
       "suggested_action": "Follow Up",
-      "follow_up_date": "2026-04-14"
+      "follow_up_date": "Apr 14th"
     },
     {
       "rank": 4,
-      "title": "Re-Engage 100% Single Heir with Open Offer — BANUELOS HELEN ESTATE",
+      "title": "Re-engage 100% Heir",
       "lead_name": "BANUELOS HELEN ESTATE",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/",
       "group": "Active Opportunities",
-      "why_today": "Jorge Banuelos holds 100% confirmed ownership, received a $125K cash offer, and told the team to call back 'in a few weeks' when last contacted February 26 — 47 days have passed and the follow-up date is 28 days overdue. A single 100% heir with an open offer awaiting attorney clearance is the cleanest one-call close in the pipeline, and a 7-week gap risks this deal going cold or being captured by a competing buyer. Call Jorge today referencing the February conversation and the $125K offer, ask for an attorney update, and probe for a decision timeline.",
+      "disposition_label": "One-Call Close",
+      "rationale": "Jorge Banuelos: 100% confirmed owner, $125K offer open, said 'call back in a few weeks' on Feb 26th — 47 days ago. Follow-up 28 days overdue. Attorney clearance pending. Cleanest close in the pipeline.",
       "suggested_action": "Re-engage",
       "follow_up_date": null
     },
     {
       "rank": 5,
-      "title": "Break Negotiation Stall — ROBERT ZABIEREK",
+      "title": "Break 61-Day Silence",
       "lead_name": "ROBERT ZABIEREK",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/",
       "group": "Active Opportunities",
-      "why_today": "Anthony Joseph Zabierek owns 100% of the property (confirmed, ownership map complete) with an active offer of $144K (increased from $141K), has been in Negotiations/Review for 61 days, and the follow-up date is 59 days overdue — the last contact was a Facebook message on March 26 that went unanswered for 19 days. A 100% single-heir deal going silent after a price increase signals either price resistance or disengagement, and without fresh outreach today this deal will age out to Long Term Follow Up. Send a new concise Facebook message today emphasizing speed and certainty of closing, acknowledge the price gap, and propose a brief call to explore whether a creative structure can bridge the $144K–$175K difference.",
+      "disposition_label": "Losing Opportunity",
+      "rationale": "Anthony Joseph: 100% owner, $144K offer (raised from $141K), silent 19 days since Mar 26th Facebook message. 61 days in negotiation, follow-up 59 days overdue. Send a direct message today or this dies.",
       "suggested_action": "Re-engage",
       "follow_up_date": null
     }
