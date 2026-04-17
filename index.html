@@ -1250,7 +1250,7 @@ function renderBriefData(data) {
         </div>
         ${popupItemsHtml}
         <div class="suggestion-popup-footer">
-          <button class="suggestion-popup-review-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')})">Review</button>
+          <button class="suggestion-popup-review-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')}, this)">Review</button>
         </div>
       </div>` : '';
 
@@ -1282,7 +1282,7 @@ function renderBriefData(data) {
       </div>
       <div>
         <div class="action-btn-wrap">
-          <button class="action-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')})">
+          <button class="action-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')}, this)">
             ${sparkSvg} ${escapeHtml(action.suggested_action || 'Review')} ${badgeHtml}
           </button>
           ${popupHtml}
@@ -1455,7 +1455,9 @@ function toggleCard(idx) {
   chevron.classList.toggle('collapsed');
 }
 
-function openDrawer(action) {
+let currentActionRow = null;
+function openDrawer(action, el) {
+  if (el) currentActionRow = el.closest('.action-row');
   drawerAction = action;
   drawerPayloads = [];
 
@@ -1550,6 +1552,12 @@ function renderCard(payload, idx) {
 function declineCard(idx) {
   const card = document.getElementById(`drawerCard_${idx}`);
   if (card) card.remove();
+  if (currentActionRow) {
+  const badge = currentActionRow.querySelector('.action-btn-badge');
+  if (badge) badge.remove();
+  const popup = currentActionRow.querySelector('.action-suggestion-popup');
+  if (popup) popup.remove();
+}
   if (document.getElementById('drawerCards').querySelectorAll('.drawer-update-card').length === 0) {
     document.getElementById('drawerCards').innerHTML = '<div class="drawer-no-update">All suggestions declined.</div>';
   }
@@ -1602,6 +1610,12 @@ async function applyUpdate(idx) {
       <div class="drawer-success-sub">"${payload.update_type_label}" has been logged to Monday.com.</div>
     `;
     cardBody.appendChild(successDiv);
+    if (currentActionRow) {
+  const badge = currentActionRow.querySelector('.action-btn-badge');
+  if (badge) badge.remove();
+  const popup = currentActionRow.querySelector('.action-suggestion-popup');
+  if (popup) popup.remove();
+}
 
   } catch (err) {
     console.error('Monday.com error:', err);
