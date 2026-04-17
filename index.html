@@ -374,7 +374,7 @@
     border: 1.5px solid #6b7280;
     border-radius: 999px;
     padding: 7px 18px;
-    font-size: 15px;
+    font-size: 15.5px;
     font-weight: 600;
     color: #1d4ed8;
     background: #fff;
@@ -385,6 +385,142 @@
   }
   .action-btn:hover { background: #eff6ff; border-color: #374151; }
   .action-btn-spark { font-size: 12px; color: #1d4ed8; }
+
+  /* Badge count inside action button */
+  .action-btn-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #1d4ed8;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 2px;
+    line-height: 1;
+  }
+
+  /* Suggested action hover popup wrapper */
+  .action-btn-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .action-btn-wrap:hover .action-suggestion-popup,
+  .action-btn-wrap:focus-within .action-suggestion-popup {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* The popup itself — 30% wider than original 280px */
+  .action-suggestion-popup {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    width: 364px;
+    background: #fff;
+    border: 1px solid #e2e5ea;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 10px 32px rgba(15,23,42,0.10), 0 0 0 1px rgba(0,0,0,0.03);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .action-btn-wrap:hover .action-suggestion-popup {
+    pointer-events: auto;
+  }
+
+  /* Arrow pointing up to button */
+  .action-suggestion-popup::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 14px; height: 14px;
+    background: #fff;
+    border-left: 1px solid #e2e5ea;
+    border-top: 1px solid #e2e5ea;
+    border-radius: 2px;
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  /* Popup header */
+  .suggestion-popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .suggestion-popup-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #122349;
+  }
+  .suggestion-popup-close {
+    font-size: 14px;
+    color: #9ca3af;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
+    background: none;
+    border: none;
+  }
+
+  /* Each suggestion row in popup */
+  .suggestion-popup-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .suggestion-popup-item:last-of-type { border-bottom: none; }
+  .suggestion-popup-item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #122349;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .suggestion-popup-item-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+  }
+  .suggestion-popup-item-desc .popup-to-value {
+    color: #06a59a;
+    font-weight: 600;
+  }
+
+  /* Review button at bottom */
+  .suggestion-popup-footer {
+    padding: 10px 16px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .suggestion-popup-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1.5px solid #c5cad6;
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #122349;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .suggestion-popup-review-btn:hover { background: #eff6ff; border-color: #2563eb; color: #1d4ed8; }
 
   .ai-brief-split {
     display: flex;
@@ -603,9 +739,8 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.3);
+    background: transparent;
     z-index: 900;
-    backdrop-filter: blur(1px);
   }
   .drawer-overlay.open { display: block; }
 
@@ -622,7 +757,7 @@
     border: 1px solid #e5e7eb;
     border-right: none;
     border-radius: 12px 0 0 12px;
-    box-shadow: -6px 0 28px rgba(15,23,42,0.13);
+    box-shadow: -2px 0 8px rgba(0,0,0,0.04), -8px 0 32px rgba(15,23,42,0.10), 0 0 0 1px rgba(0,0,0,0.03);
     z-index: 1000;
     display: flex;
     flex-direction: column;
@@ -707,26 +842,40 @@
   }
   .drawer-update-card:last-of-type { border-bottom: none; }
 
-  /* Card top meta */
+  /* Card top header row — title left, date right */
   .drawer-card-meta {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 16px 20px 4px 20px;
+    justify-content: space-between;
+    padding: 16px 20px 0 20px;
+  }
+  .drawer-card-meta-date {
     font-size: 12px;
-    color: #6b7280;
+    color: #9ca3af;
     font-weight: 500;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   .drawer-card-meta-dot { color: #2563eb; font-size: 13px; }
 
-  /* Collapsible title row */
+  /* Title row — no separate row needed, integrated into meta */
   .drawer-card-title-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 20px 10px 20px;
+    display: none;
+  }
+
+  /* Title shown directly in meta row */
+  .drawer-card-meta-title {
+    font-size: 20.5px;
+    font-weight: 700;
+    color: #122349;
     cursor: pointer;
     user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    line-height: 1.2;
   }
   .drawer-card-chevron {
     font-size: 11px;
@@ -735,11 +884,6 @@
     flex-shrink: 0;
   }
   .drawer-card-chevron.collapsed { transform: rotate(-90deg); }
-  .drawer-card-title {
-    font-size: 19px;
-    font-weight: 700;
-    color: #122349;
-  }
 
   /* Card body */
   .drawer-card-body {
@@ -752,9 +896,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 0 14px 0;
+    padding: 12px 0 12px 0;
     flex-wrap: wrap;
-    border-top: 1px solid #f3f4f6;
+    border-top: 1px solid #f0f2f5;
+    margin-top: 10px;
   }
   .drawer-card-change-label { font-size: 13px; color: #6b7280; font-weight: 400; }
   .drawer-card-from {
@@ -769,10 +914,17 @@
     background: #f0fdf4; border: 1px solid #bbf7d0;
     border-radius: 6px; padding: 4px 10px;
   }
+  /* First card only — teal highlight on the suggested value */
+  .drawer-update-card:first-of-type .drawer-card-to {
+    color: #166534;
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    box-shadow: none;
+  }
 
   /* Rationale text */
   .drawer-card-new-value {
-    font-size: 13px; line-height: 1.6; color: #374151; padding: 0 0 10px 0;
+    font-size: 13px; line-height: 1.6; color: #374151; padding: 4px 0 12px 0;
   }
   .drawer-card-rationale-label { font-size: 13px; font-weight: 700; color: #122349; }
 
@@ -1077,6 +1229,31 @@ function renderBriefData(data) {
 
     const sparkSvg = `<svg class="spark-svg" viewBox="0 0 400 364" xmlns="http://www.w3.org/2000/svg"><path d="M144.787 19.859 C 144.677 20.047,144.476 21.019,144.339 22.020 C 141.265 44.513,120.997 64.642,98.180 67.862 C 95.911 68.183,95.985 68.634,98.360 68.949 C 120.782 71.924,141.059 92.123,144.328 114.741 C 144.678 117.161,145.033 116.898,145.558 113.831 C 148.428 97.060,160.143 81.667,175.938 73.910 C 181.200 71.326,189.415 68.790,192.523 68.790 C 194.487 68.790,192.852 68.133,189.104 67.416 C 167.704 63.322,149.213 44.567,145.627 23.317 C 145.274 21.228,144.896 19.672,144.787 19.859 M251.501 76.716 C 251.501 77.665,250.011 87.110,249.319 90.551 C 238.941 142.109,193.318 184.745,140.572 192.176 C 135.288 192.920,134.656 193.114,136.542 193.413 C 137.213 193.519,139.481 193.872,141.583 194.197 C 197.876 202.911,243.768 249.319,250.799 304.641 C 251.346 308.949,251.719 309.772,252.029 307.356 C 258.947 253.418,297.618 209.938,350.682 196.436 C 355.414 195.231,357.614 194.817,365.787 193.586 L 368.881 193.121 367.243 192.848 C 366.342 192.698,363.394 192.229,360.692 191.804 C 305.068 183.070,259.905 136.856,252.389 80.983 C 251.879 77.194,251.501 75.378,251.501 76.716 M95.215 214.741 C 95.094 215.241,94.514 217.944,93.926 220.746 C 87.771 250.053,64.064 272.937,33.705 278.875 C 29.242 279.749,29.299 279.852,34.759 280.770 C 64.269 285.734,89.953 312.247,94.813 342.764 C 95.227 345.367,95.588 344.835,96.418 340.390 C 102.029 310.345,127.957 284.934,157.416 280.610 C 162.695 279.835,162.565 279.646,155.960 278.495 C 126.845 273.420,102.772 249.546,96.630 219.654 C 95.812 215.672,95.365 214.118,95.215 214.741" fill="#0543f5"/></svg>`;
 
+    // Build field_suggestions preview for popup
+    const suggestions = action.field_suggestions || [];
+    const badgeHtml = suggestions.length > 0
+      ? `<span class="action-btn-badge">+${suggestions.length}</span>`
+      : '';
+
+    const popupItemsHtml = suggestions.length > 0
+      ? suggestions.slice(0, 2).map(s => `
+          <div class="suggestion-popup-item">
+            <div class="suggestion-popup-item-title"><svg style="width:13px;height:13px;flex-shrink:0;" viewBox="0 0 400 364" xmlns="http://www.w3.org/2000/svg"><path d="M144.787 19.859 C 144.677 20.047,144.476 21.019,144.339 22.020 C 141.265 44.513,120.997 64.642,98.180 67.862 C 95.911 68.183,95.985 68.634,98.360 68.949 C 120.782 71.924,141.059 92.123,144.328 114.741 C 144.678 117.161,145.033 116.898,145.558 113.831 C 148.428 97.060,160.143 81.667,175.938 73.910 C 181.200 71.326,189.415 68.790,192.523 68.790 C 194.487 68.790,192.852 68.133,189.104 67.416 C 167.704 63.322,149.213 44.567,145.627 23.317 C 145.274 21.228,144.896 19.672,144.787 19.859 M251.501 76.716 C 251.501 77.665,250.011 87.110,249.319 90.551 C 238.941 142.109,193.318 184.745,140.572 192.176 C 135.288 192.920,134.656 193.114,136.542 193.413 C 137.213 193.519,139.481 193.872,141.583 194.197 C 197.876 202.911,243.768 249.319,250.799 304.641 C 251.346 308.949,251.719 309.772,252.029 307.356 C 258.947 253.418,297.618 209.938,350.682 196.436 C 355.414 195.231,357.614 194.817,365.787 193.586 L 368.881 193.121 367.243 192.848 C 366.342 192.698,363.394 192.229,360.692 191.804 C 305.068 183.070,259.905 136.856,252.389 80.983 C 251.879 77.194,251.501 75.378,251.501 76.716 M95.215 214.741 C 95.094 215.241,94.514 217.944,93.926 220.746 C 87.771 250.053,64.064 272.937,33.705 278.875 C 29.242 279.749,29.299 279.852,34.759 280.770 C 64.269 285.734,89.953 312.247,94.813 342.764 C 95.227 345.367,95.588 344.835,96.418 340.390 C 102.029 310.345,127.957 284.934,157.416 280.610 C 162.695 279.835,162.565 279.646,155.960 278.495 C 126.845 273.420,102.772 249.546,96.630 219.654 C 95.812 215.672,95.365 214.118,95.215 214.741" fill="#0543f5"/></svg>${escapeHtml(s.update_type_label)}</div>
+            <div class="suggestion-popup-item-desc">${escapeHtml(s.from_value || 'Not set')} → <span class="popup-to-value">${escapeHtml(s.to_value)}</span></div>
+          </div>`).join('')
+      : '';
+
+    const popupHtml = suggestions.length > 0 ? `
+      <div class="action-suggestion-popup">
+        <div class="suggestion-popup-header">
+          <span class="suggestion-popup-title">Suggested Changes</span>
+        </div>
+        ${popupItemsHtml}
+        <div class="suggestion-popup-footer">
+          <button class="suggestion-popup-review-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')})">Review</button>
+        </div>
+      </div>` : '';
+
     row.innerHTML = `
       <div class="action-left">
         <div class="action-icon ${cfg.iconClass || ''}" style="background:${cfg.color};">${cfg.svg}</div>
@@ -1104,9 +1281,12 @@ function renderBriefData(data) {
         </div>
       </div>
       <div>
-        <button class="action-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')})">
-          ${sparkSvg} ${escapeHtml(action.suggested_action || 'Review')}
-        </button>
+        <div class="action-btn-wrap">
+          <button class="action-btn" onclick="openDrawer(${JSON.stringify(action).replace(/"/g, '&quot;')})">
+            ${sparkSvg} ${escapeHtml(action.suggested_action || 'Review')} ${badgeHtml}
+          </button>
+          ${popupHtml}
+        </div>
       </div>
     `;
 
@@ -1193,7 +1373,11 @@ const DEMO_DATA = {
       "disposition_label": "Prioritize Closing",
       "rationale": "2 agreement tasks overdue — Nneka Uzodinma since Apr 13th, Kenyatta Lewis due Apr 15th. 12+ heirs aligned. Every day of delay risks a change of heart. Send Nneka's agreement now, call Kenyatta directly.",
       "suggested_action": "Prepare",
-      "follow_up_date": "Apr 15th"
+      "follow_up_date": "Apr 15th",
+      "field_suggestions": [
+        { "update_type_label": "Update Follow-Up Date", "from_value": "Not set", "to_value": "Apr 15, 2026" },
+        { "update_type_label": "Update Next Step", "from_value": "Not set", "to_value": "Send Nneka's agreement; call Kenyatta directly" }
+      ]
     },
     {
       "rank": 2,
@@ -1204,7 +1388,10 @@ const DEMO_DATA = {
       "disposition_label": "Missing Next Steps",
       "rationale": "Merp Form + Seller Info Sheet both due today. Patrick & Dakorey agreed at $90K but 3rd heir Oshae (33%) is incarcerated — SPN 02468773, Public Defender 713-274-8863. Can't close without him.",
       "suggested_action": "Prepare",
-      "follow_up_date": "Apr 14th"
+      "follow_up_date": "Apr 14th",
+      "field_suggestions": [
+        { "update_type_label": "Update Next Step", "from_value": "Not set", "to_value": "Complete Merp Form + Seller Info Sheet today" }
+      ]
     },
     {
       "rank": 3,
@@ -1277,9 +1464,15 @@ function openDrawer(action) {
   document.getElementById('drawerLoading').style.display = 'none';
   document.getElementById('drawerCards').innerHTML = '';
 
+  // Hide all suggestion popups
+  document.querySelectorAll('.action-suggestion-popup').forEach(p => {
+    p.style.opacity = '0';
+    p.style.visibility = 'hidden';
+    p.style.pointerEvents = 'none';
+  });
+
   document.getElementById('drawerOverlay').classList.add('open');
   document.getElementById('actionDrawer').classList.add('open');
-  document.body.style.overflow = 'hidden';
 
   const suggestions = action.field_suggestions;
   if (!Array.isArray(suggestions) || suggestions.length === 0) {
@@ -1298,7 +1491,14 @@ function openDrawer(action) {
 function closeDrawer() {
   document.getElementById('drawerOverlay').classList.remove('open');
   document.getElementById('actionDrawer').classList.remove('open');
-  document.body.style.overflow = '';
+
+  // Restore all suggestion popups to CSS-hover control
+  document.querySelectorAll('.action-suggestion-popup').forEach(p => {
+    p.style.opacity = '';
+    p.style.visibility = '';
+    p.style.pointerEvents = '';
+  });
+
   drawerAction = null;
   drawerPayloads = [];
 }
@@ -1318,14 +1518,13 @@ function renderCard(payload, idx) {
 
   card.innerHTML = `
     <div class="drawer-card-meta">
-      <span>AI Workspace</span>
-      <span style="color:#d1d5db;">·</span>
-      <span>${today}</span>
-      <span class="drawer-card-meta-dot">✦</span>
-    </div>
-    <div class="drawer-card-title-row" onclick="toggleCard(${idx})">
-      <span class="drawer-card-chevron" id="drawerChevron_${idx}">▼</span>
-      <span class="drawer-card-title">${payload.update_type_label}</span>
+      <div class="drawer-card-meta-title" onclick="toggleCard(${idx})">
+        <span class="drawer-card-chevron" id="drawerChevron_${idx}">▼</span>
+        ${payload.update_type_label}
+      </div>
+      <div class="drawer-card-meta-date">
+        ${today} <span class="drawer-card-meta-dot">✦</span>
+      </div>
     </div>
     <div class="drawer-card-body" id="drawerCardBody_${idx}">
       <div class="drawer-card-change-row">
