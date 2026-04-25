@@ -1610,11 +1610,11 @@ async function applyUpdate(idx) {
     let responseData = {};
     try { responseData = await res.json(); } catch(e) {}
 
-    if (responseData.Actioned === true && responseData.IndexNumber \!= null) {
+    if (responseData.Actioned === true && responseData.IndexNumber != null) {
       const key = 'actioned_' + currentBriefDate;
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
       const actionIdx = responseData.IndexNumber;
-      if (\!existing.includes(actionIdx)) {
+      if (!existing.includes(actionIdx)) {
         existing.push(actionIdx);
         localStorage.setItem(key, JSON.stringify(existing));
       }
