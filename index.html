@@ -1152,6 +1152,7 @@ function renderBriefData(data) {
   const today = data.date ? formatDate(data.date) : 'today';
   document.getElementById('topBarSub').textContent = `Here are your priority actions for ${today}.`;
   if (data.date) document.getElementById('briefDate').textContent = data.date;
+  currentBriefDate = data.date || '';
 
   // Pipeline metrics
   if (data.pipeline_summary) {
@@ -1205,7 +1206,12 @@ function renderBriefData(data) {
     return;
   }
 
+  // Load persisted actioned indices for today's brief
+  const actionedKey = `actioned_${currentBriefDate}`;
+  const actionedIndices = JSON.parse(localStorage.getItem(actionedKey) || '[]');
+
   data.top_actions.forEach((action, idx) => {
+    if (actionedIndices.includes(action.rank)) return; // already actioned — skip
     // Original approved icon colors keyed to suggested_action
     const cfg = ACTION_CONFIG[action.suggested_action] || ACTION_CONFIG['Follow Up'];
 
@@ -1456,6 +1462,7 @@ function toggleCard(idx) {
 }
 
 let currentActionRow = null;
+let currentBriefDate = '';
 function openDrawer(action, el) {
   if (el) currentActionRow = el.closest('.action-row');
   drawerAction = action;
@@ -1591,11 +1598,32 @@ async function applyUpdate(idx) {
         lead_name: drawerAction.lead_name,
         update_type: payload.update_type_label,
         column_id: payload.column_id,
-        to_value: payload.to_value
+        to_value: payload.to_value,
+        Actioned: true,
+        IndexNumber: drawerAction.rank
       })
     });
 
     if (!res.ok) throw new Error(`Webhook returned ${res.status}`);
+
+    // Parse Make.com response and persist actioned state
+    let responseData = {};
+    try { responseData = await res.json(); } catch(e) {}
+
+    if (responseData.Actioned === true && responseData.IndexNumber \!= null) {
+      const key = 'actioned_' + currentBriefDate;
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      const actionIdx = responseData.IndexNumber;
+      if (\!existing.includes(actionIdx)) {
+        existing.push(actionIdx);
+        localStorage.setItem(key, JSON.stringify(existing));
+      }
+      if (currentActionRow) {
+        currentActionRow.style.transition = 'opacity 0.3s ease';
+        currentActionRow.style.opacity = '0';
+        setTimeout(() => { if (currentActionRow) { currentActionRow.remove(); currentActionRow = null; } }, 300);
+      }
+    }
 
     // Show inline success
     const cardBody = document.getElementById(`drawerCardBody_${idx}`);
