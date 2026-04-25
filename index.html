@@ -1597,10 +1597,6 @@ function declineCard(idx) {
     document.getElementById('drawerCards').innerHTML = '<div class="drawer-no-update">All suggestions declined.</div>';
   }
 }
-  if (document.getElementById('drawerCards').querySelectorAll('.drawer-update-card').length === 0) {
-    document.getElementById('drawerCards').innerHTML = '<div class="drawer-no-update">All suggestions declined.</div>';
-  }
-}
 
 
 async function applyUpdate(idx) {
