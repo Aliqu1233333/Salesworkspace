@@ -1305,6 +1305,18 @@
     color: #374151;
     white-space: nowrap;
   }
+  .fu-tag {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .fu-tag-today    { background: #d1fae5; color: #065f46; }
+  .fu-tag-tomorrow { background: #dbeafe; color: #1e40af; }
+  .fu-tag-upcoming { background: #FDE4E1; color: #CA3831; }
+  .fu-tag-yesterday{ background: #fef3c7; color: #92400e; }
   .widget-drawer-empty {
     text-align: center;
     padding: 60px 24px;
@@ -1694,15 +1706,15 @@ function renderFollowUps(data) {
   document.getElementById('followupTomorrow').textContent = countTomorrow;
   document.getElementById('followupUpcoming').textContent = countUpcoming;
 
-  // Store for drawer — all records with a follow_up_date in the next 7 days
+  // Store for drawer — records from yesterday through today+7, sorted soonest first
+  const yesterdayDate = new Date(todayDate); yesterdayDate.setDate(todayDate.getDate() - 1);
+  const toMs = s => { const iso = String(s).match(/^\d{4}-\d{2}-\d{2}$/); if (iso) return new Date(s + 'T12:00:00').getTime(); const p = new Date(s + ' ' + todayDate.getFullYear()); return isNaN(p) ? Infinity : p.getTime(); };
   _widgetDrawerData.followups = allRecords.filter(a => {
     if (!a.follow_up_date) return false;
-    let d = null;
-    const iso = String(a.follow_up_date).match(/^\d{4}-\d{2}-\d{2}$/);
-    if (iso) d = new Date(a.follow_up_date + 'T12:00:00');
-    else { const p = new Date(a.follow_up_date + ' ' + todayDate.getFullYear()); if (!isNaN(p)) d = p; }
-    return d && d.getTime() <= weekDate.getTime();
-  }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group }));
+    const ms = toMs(a.follow_up_date);
+    return ms !== Infinity && ms >= yesterdayDate.getTime() && ms <= weekDate.getTime();
+  }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group }))
+  .sort((a, b) => toMs(a.follow_up_date) - toMs(b.follow_up_date));
 
   // Update donut ring color based on dominant category
   const ring = document.getElementById('sfDonutRing');
@@ -1831,19 +1843,33 @@ function openWidgetDrawer(type) {
   if (type === 'followups') {
     let records = _widgetDrawerData.followups || [];
     title.innerHTML = `Follow-ups next 7 days <span class="widget-drawer-count-badge">${records.length}</span>`;
-    subtitle.textContent = 'Scheduled outreach due within the next 7 days';
+    subtitle.textContent = 'Scheduled outreach — yesterday through 7 days out, sorted soonest first';
+    // Helper: tag a follow-up date string with a colored badge
+    const _fuNow = new Date(); _fuNow.setHours(12,0,0,0);
+    function _fuTag(dateStr) {
+      const iso = String(dateStr).match(/^\d{4}-\d{2}-\d{2}$/);
+      const d = iso ? new Date(dateStr + 'T12:00:00') : new Date(dateStr + ' ' + _fuNow.getFullYear());
+      if (!d || isNaN(d)) return '';
+      const ds = d.toDateString();
+      if (ds === new Date(_fuNow.getTime() - 86400000).toDateString()) return '<span class="fu-tag fu-tag-yesterday">Yesterday</span>';
+      if (ds === _fuNow.toDateString())                                 return '<span class="fu-tag fu-tag-today">Today</span>';
+      if (ds === new Date(_fuNow.getTime() + 86400000).toDateString()) return '<span class="fu-tag fu-tag-tomorrow">Tomorrow</span>';
+      return '<span class="fu-tag fu-tag-upcoming">Upcoming Soon</span>';
+    }
     head.innerHTML = `<tr>
       <th>Record name</th>
       <th>Follow-up date</th>
+      <th>When</th>
       <th>Group</th>
     </tr>`;
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="3"><div class="widget-drawer-empty">No follow-ups found for the next 7 days.</div></td></tr>`;
+      body.innerHTML = `<tr><td colspan="4"><div class="widget-drawer-empty">No follow-ups found for the next 7 days.</div></td></tr>`;
     } else {
       body.innerHTML = records.map(r => `
         <tr>
           <td><a class="widget-drawer-record-link" href="${escapeHtml(r.lead_url || '#')}" target="_blank">${escapeHtml(r.lead_name)}</a></td>
           <td><span class="widget-drawer-date">${escapeHtml(formatDisplayDate(r.follow_up_date) || '—')}</span></td>
+          <td>${_fuTag(r.follow_up_date)}</td>
           <td><span class="widget-drawer-group-pill">${escapeHtml(r.group || '—')}</span></td>
         </tr>`).join('');
     }
