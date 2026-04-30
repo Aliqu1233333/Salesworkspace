@@ -1830,13 +1830,6 @@ function openWidgetDrawer(type) {
 
   if (type === 'followups') {
     let records = _widgetDrawerData.followups || [];
-    if (records.length === 0) {
-      records = [
-        { lead_name: "James Gordon", lead_url: "#", follow_up_date: "2026-04-30", group: "Offer Sent" },
-        { lead_name: "Bruce Wayne", lead_url: "#", follow_up_date: "2026-05-01", group: "In Negotiation" },
-        { lead_name: "Harvey Dent", lead_url: "#", follow_up_date: "2026-05-02", group: "Active Leads" }
-      ];
-    }
     title.innerHTML = `Follow-ups next 7 days <span class="widget-drawer-count-badge">${records.length}</span>`;
     subtitle.textContent = 'Scheduled outreach due within the next 7 days';
     head.innerHTML = `<tr>
@@ -1856,13 +1849,6 @@ function openWidgetDrawer(type) {
     }
   } else if (type === 'stalled') {
     let records = _widgetDrawerData.stalled || [];
-    if (records.length === 0) {
-      records = [
-        { lead_name: "Clark Kent", lead_url: "#", stall_reason: "Waiting On Probate", group: "In Negotiation" },
-        { lead_name: "Lois Lane", lead_url: "#", stall_reason: "Can't Contact Owner", group: "Offer Sent" },
-        { lead_name: "Lex Luthor", lead_url: "#", stall_reason: "Waiting On Response", group: "Active Leads" }
-      ];
-    }
     title.innerHTML = `Stalled deals <span class="widget-drawer-count-badge">${records.length}</span>`;
     subtitle.textContent = 'Deals currently stalled — sorted by stall reason';
     head.innerHTML = `<tr>
