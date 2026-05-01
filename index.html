@@ -470,7 +470,7 @@
   .action-btn-wrap:focus-within .action-suggestion-popup {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0) !important;
   }
 
   /* The popup itself */
@@ -495,6 +495,17 @@
     pointer-events: auto;
   }
 
+  /* Popup opens upward (for last rows near bottom of screen) */
+  .action-suggestion-popup.popup-above {
+    top: auto;
+    bottom: calc(100% + 10px);
+    transform: translateX(-50%) translateY(4px);
+  }
+  .action-btn-wrap:hover .action-suggestion-popup.popup-above,
+  .action-btn-wrap:focus-within .action-suggestion-popup.popup-above {
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* Arrow pointing up to button */
   .action-suggestion-popup::before {
     content: '';
@@ -507,6 +518,16 @@
     border-top: 1px solid #e2e5ea;
     border-radius: 2px;
     transform: translateX(-50%) rotate(45deg);
+  }
+
+  /* Arrow pointing down (for upward popup) */
+  .action-suggestion-popup.popup-above::before {
+    top: auto;
+    bottom: -8px;
+    border-left: none;
+    border-top: none;
+    border-right: 1px solid #e2e5ea;
+    border-bottom: 1px solid #e2e5ea;
   }
 
   /* Popup header */
@@ -1533,6 +1554,40 @@ const ACTION_CONFIG = {
   }
 };
 
+// ── Title-based icon overrides (matched by keyword in action title) ─────────
+const TITLE_ICON_CONFIG = [
+  {
+    // Underwrite — document/pen icon
+    keywords: ['underwrite'],
+    color: '#7c3aed',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"/></svg>`
+  },
+  {
+    // Re-engage / Shana / close loop — refresh/cycle icon
+    keywords: ['re-engage', 'reengage', 'close loop', 'shana'],
+    color: '#ff5d2d',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="M460 240A200 200 0 1 0 278 459l-18-38a160 160 0 1 1 142-181h-52l70 100 70-100h-50A200 200 0 0 0 460 240z"/></svg>`
+  },
+  {
+    // Legal / Check legal / legal status — scales/gavel icon
+    keywords: ['legal', 'check legal'],
+    color: '#0891b2',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="M260 40a20 20 0 0 0-20 20v20H120c-22 0-40 18-40 40v300c0 22 18 40 40 40h280c22 0 40-18 40-40V120c0-22-18-40-40-40H280V60a20 20 0 0 0-20-20zM150 220h220v32H150v-32zm0 76h220v32H150v-32zm0-152h80v32h-80v-32zm100 0h120v32H250v-32z"/></svg>`
+  },
+  {
+    // Call — phone icon
+    keywords: ['call'],
+    color: '#059669',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><path d="M400 340c-20-20-60-20-80 0l-30 30c-60-30-110-80-140-140l30-30c20-20 20-60 0-80l-60-60c-20-20-50-20-70 0L20 90C0 110 0 150 20 180c60 130 180 240 320 300 30 20 70 20 90 0l40-40c20-20 20-50 0-70z"/></svg>`
+  },
+  {
+    // Consolidate heirs / heirs / set path — people/group icon
+    keywords: ['heir', 'consolidat', 'family'],
+    color: '#d97706',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="#fff"><circle cx="180" cy="160" r="70"/><path d="M180 260c-77 0-140 45-140 100v20h280v-20c0-55-63-100-140-100z"/><circle cx="360" cy="180" r="55"/><path d="M360 270c-30 0-57 9-78 24 30 22 48 54 48 86v10h110v-16c0-57-36-104-80-104z"/></svg>`
+  }
+];
+
 // ── Render pipeline data ───────────────────────────────────
 function renderBriefData(data) {
   const today = data.date ? formatDate(data.date) : 'today';
@@ -1578,6 +1633,16 @@ function renderBriefData(data) {
     const actionForDrawer = Object.assign({}, action, { field_suggestions: activeSuggestions });
     const cfg = ACTION_CONFIG[action.suggested_action] || ACTION_CONFIG['Follow Up'];
 
+    // Override icon based on action title keywords
+    const titleLower = (action.title || '').toLowerCase();
+    const titleOverride = TITLE_ICON_CONFIG.find(t => t.keywords.some(k => titleLower.includes(k)));
+    const iconColor = titleOverride ? titleOverride.color : cfg.color;
+    const iconSvg = titleOverride ? titleOverride.svg : cfg.svg;
+
+    // Apply popup-above for last 2 rows so popup doesn't go off-screen
+    const totalActions = data.top_actions.length;
+    const isNearBottom = idx >= totalActions - 2;
+
     const followUpLabel = action.follow_up_date
       ? `${action.group} · ${action.follow_up_date}`
       : action.group;
@@ -1608,7 +1673,7 @@ function renderBriefData(data) {
       : '';
 
     const popupHtml = suggestions.length > 0 ? `
-      <div class="action-suggestion-popup">
+      <div class="action-suggestion-popup${isNearBottom ? ' popup-above' : ''}">
         <div class="suggestion-popup-header">
           <span class="suggestion-popup-title">Suggested Changes</span>
         </div>
@@ -1620,7 +1685,7 @@ function renderBriefData(data) {
 
     row.innerHTML = `
       <div class="action-left">
-        <div class="action-icon ${cfg.iconClass || ''}" style="background:${cfg.color};">${cfg.svg}</div>
+        <div class="action-icon ${cfg.iconClass || ''}" style="background:${iconColor};">${iconSvg}</div>
         <div class="action-info">
           <div class="action-name">${escapeHtml(action.title)}</div>
           <div class="action-subtext">${escapeHtml(followUpLabel)}</div>
