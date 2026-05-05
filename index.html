@@ -1733,7 +1733,7 @@ function renderFollowUps(data) {
 
   let countToday = 0, countTomorrow = 0, countUpcoming = 0;
 
-  const allRecords = [...actions, ...(data.recent_records || [])];
+  const allRecords = [...(data.recent_records || []), ...actions];
   const seen = new Set();
 
   allRecords.forEach(a => {
