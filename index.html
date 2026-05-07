@@ -2824,8 +2824,10 @@ const DEMO_DATA = {
 };
 
 // ── Init ───────────────────────────────────────────────────
-loadBriefData();
-fetchCalendarEvents(); // fire calendar webhook immediately on page load; DOM render happens when tab is opened
+document.addEventListener('DOMContentLoaded', function() {
+  loadBriefData();
+  fetchCalendarEvents(); // fire calendar webhook immediately on page load; DOM render happens when tab is opened
+});
 
 // ── Action Drawer ──────────────────────────────────────────
 // Monday.com updates are sent via Make.com (token stays server-side, never in this file)
@@ -3129,8 +3131,8 @@ async function fetchCalendarEvents() {
         const parentCols = {};
         (parent.column_values || []).forEach(cv => { parentCols[cv.id] = cv.text; });
 
-        const parentName   = parent.name || '';
-        const address      = parentCols['text5__1'] || '';
+        const parentName   = toProperCase(parent.name || '');
+        const address      = toProperCase(parentCols['text5__1'] || '');
         const parentUpdate = parent.updates?.[0]?.body || '';
         const parentId     = parent.id || '';
 
@@ -3167,6 +3169,16 @@ async function fetchCalendarEvents() {
   calInitialized = true; // mark as fetched regardless of success/failure
 }
 
+// ── Convert ALL CAPS to Proper Case ──────────────────────────
+function toProperCase(str) {
+  if (!str) return '';
+  // Only convert if the string is predominantly uppercase
+  const upper = (str.match(/[A-Z]/g) || []).length;
+  const lower = (str.match(/[a-z]/g) || []).length;
+  if (upper <= lower) return str; // already mixed case, leave it alone
+  return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+}
+
 // ── Strip HTML tags and clean whitespace from update bodies ──
 function stripHtml(str) {
   if (!str) return '';
@@ -3196,7 +3208,7 @@ function normalizeEvent(raw) {
   d.setHours(0, 0, 0, 0);
 
   // Name — try common field names
-  const name = raw.name || raw.lead_name || raw.contact_name || raw.full_name || 'Follow-Up';
+  const name = toProperCase(raw.name || raw.lead_name || raw.contact_name || raw.full_name || 'Follow-Up');
 
   // Stage — drives color coding
   const stage = raw.stage || raw.lead_stage || raw.status || raw.pipeline_stage || '';
@@ -3205,11 +3217,11 @@ function normalizeEvent(raw) {
   const group = raw.group || raw.pipeline_group || raw.pipeline_stage || stage || '';
 
   // Contact name
-  const contact = raw.contact || raw.contact_name || raw.lead_name || name;
+  const contact = toProperCase(raw.contact || raw.contact_name || raw.lead_name || name);
 
   // Address / Related To
-  const address = raw.address || raw.property_address || '';
-  const related = raw.related || (address ? `${name} · ${address}` : name);
+  const address = toProperCase(raw.address || raw.property_address || '');
+  const related = toProperCase(raw.related || (address ? `${name} · ${address}` : name));
 
   // Record URL — for clicking through to the pipeline
   const lead_url = raw.lead_url || raw.record_url || raw.item_url || raw.monday_url || '#';
