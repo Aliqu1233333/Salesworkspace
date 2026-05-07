@@ -3112,10 +3112,10 @@ async function fetchCalendarEvents() {
 
     let raw = [];
 
-    if (data?.data?.boards?.[0]?.items_page?.items) {
-      // GraphQL shape from Make.com:
-      // { data: { boards: [{ items_page: { items: [...] } }] } }
-      const items = data.data.boards[0].items_page.items;
+    if (data?.boards?.[0]?.items_page?.items) {
+      // GraphQL shape from Make.com native monday module:
+      // { boards: [{ items_page: { items: [...] } }] }
+      const items = data.boards[0].items_page.items;
 
       items.forEach(subitem => {
         // Build column value lookup maps
