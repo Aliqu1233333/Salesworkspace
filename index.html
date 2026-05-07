@@ -50,7 +50,7 @@
   .page {
     width: 100%;
     max-width: 2100px;
-    padding: 15px 44px 60px 44px;
+    padding: 6px 44px 60px 44px;
     position: relative;
     z-index: 1;
   }
@@ -60,7 +60,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
     padding: 0 12px; /* Slight indent to align with rounded cards */
   }
   .top-bar-title {
@@ -105,7 +105,7 @@
     display: flex;
     gap: 24px;
     overflow: visible;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
   }
 
   /* LEFT METRICS (Floating Card) */
@@ -1365,6 +1365,7 @@
     align-items: center;
     gap: 0;
     margin-bottom: 16px;
+    padding-top: 4px;
     border-bottom: 2px solid #e2e8f0;
   }
   .workspace-tab {
@@ -1850,7 +1851,7 @@
   .cal-popout-icon svg { width: 24px; height: 24px; display: block; }
   .cal-popout-title-text { flex: 1; min-width: 0; }
   .cal-popout-name {
-    font-size: 15.5px;
+    font-size: 16.5px;
     font-weight: 400;
     color: #0176d3;
     line-height: 1.3;
@@ -1863,13 +1864,13 @@
   }
   .cal-popout-name:hover { text-decoration: underline; }
   .cal-popout-related {
-    font-size: 11.5px;
+    font-size: 12.5px;
     font-weight: 600;
     color: #374151;
     line-height: 1.4;
   }
   .cal-popout-stage {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     color: #6b7280;
     margin-top: 2px;
@@ -1898,14 +1899,14 @@
   }
   .cal-popout-field { flex: 1; min-width: 0; }
   .cal-popout-field-label {
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 500;
     color: #9ca3af;
     margin-bottom: 2px;
     letter-spacing: 0;
   }
   .cal-popout-field-value {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: #374151;
     white-space: nowrap;
@@ -1914,7 +1915,7 @@
   }
   .cal-popout-contact-link {
     color: #0176d3;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
@@ -1929,14 +1930,14 @@
     margin: 8px 0;
   }
   .cal-popout-notes-label {
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 500;
     color: #9ca3af;
     margin-bottom: 3px;
   }
   .cal-popout-notes-text {
-    font-size: 11.5px;
-    color: #6b7280;
+    font-size: 12.5px;
+    color: #374151;
     font-style: italic;
     line-height: 1.4;
   }
@@ -1986,6 +1987,17 @@
 </head>
 <body>
 <div class="page">
+<!-- WORKSPACE TABS — at the very top -->
+<div class="workspace-tabs">
+  <button class="workspace-tab active" id="tabDashboard" onclick="switchTab('dashboard')">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M60 60h160v160H60zm240 0h160v160H300zM60 300h160v160H60zm240 0h160v160H300z"/></svg>
+    Dashboard
+  </button>
+  <button class="workspace-tab" id="tabCalendar" onclick="switchTab('calendar')">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M400 60H360V40c0-11-9-20-20-20s-20 9-20 20v20H200V40c0-11-9-20-20-20s-20 9-20 20v20H120C97 60 78 79 78 102v316c0 23 19 42 42 42h280c23 0 42-19 42-42V102c0-23-19-42-42-42zm2 358H118V180h284v238zM118 140v-38h42v20c0 11 9 20 20 20s20-9 20-20v-20h120v20c0 11 9 20 20 20s20-9 20-20v-20h42v38H118z"/></svg>
+    Calendar
+  </button>
+</div>
 <!-- TOP BAR -->
 <!-- MAIN TOP CARD -->
 <div class="global-top-bar" style="display: flex; justify-content: flex-end; width: 100%; margin-bottom: 17px; position: relative; z-index: 50;"><div class="activity-dropdown" id="activityDropdown">
@@ -2002,20 +2014,11 @@
 <div class="activity-item"><div class="activity-icon-wrap" style="background:#1b96ff;"><svg fill="#fff" viewbox="0 0 520 520" xmlns="http://www.w3.org/2000/svg"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Follow-Ups Set</div></div><div class="activity-item-count">11</div></div>
 <div class="activity-item"><div class="activity-icon-wrap" style="background:#ff538a;"><svg fill="#fff" viewbox="0 0 520 520" xmlns="http://www.w3.org/2000/svg"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Offers Made</div></div><div class="activity-item-count">2</div></div>
 </div>
-</div></div><div class="workspace-tabs">
-  <button class="workspace-tab active" id="tabDashboard" onclick="switchTab('dashboard')">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M60 60h160v160H60zm240 0h160v160H300zM60 300h160v160H60zm240 0h160v160H300z"/></svg>
-    Dashboard
-  </button>
-  <button class="workspace-tab" id="tabCalendar" onclick="switchTab('calendar')">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M400 60H360V40c0-11-9-20-20-20s-20 9-20 20v20H200V40c0-11-9-20-20-20s-20 9-20 20v20H120C97 60 78 79 78 102v316c0 23 19 42 42 42h280c23 0 42-19 42-42V102c0-23-19-42-42-42zm2 358H118V180h284v238zM118 140v-38h42v20c0 11 9 20 20 20s20-9 20-20v-20h120v20c0 11 9 20 20 20s20-9 20-20v-20h42v38H118z"/></svg>
-    Calendar
-  </button>
-</div>
+</div></div>
 
 <!-- DASHBOARD PANEL -->
 <div class="workspace-panel active" id="panelDashboard">
-<div class="top-unified-card" style="display: flex; align-items: center; justify-content: flex-start; gap: 32px; background: #eef2ff; border-radius: 24px; padding: 18px 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #dce4f5; margin-bottom: 32px;"><div class="header-text-block" style="flex: 0 0 460px; min-width: 300px;"><div>
+<div class="top-unified-card" style="display: flex; align-items: center; justify-content: flex-start; gap: 32px; background: #eef2ff; border-radius: 24px; padding: 18px 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #dce4f5; margin-bottom: 16px;"><div class="header-text-block" style="flex: 0 0 460px; min-width: 300px;"><div>
 <div class="top-bar-title" style="font-size: 15px; font-weight: 400; color: #6b7280; margin-bottom: 4px;">Hi, Christian.</div>
 <div class="top-bar-title" style="font-size: 34.5px; font-weight: 400;">Sales Workspace</div>
 <div class="top-bar-sub" id="topBarSub" style="font-size: 17px; font-weight: 400; margin-top: 10px;">Loading your pipeline brief…</div>
@@ -3136,7 +3139,7 @@ async function fetchCalendarEvents() {
           name:           subitem.name,                           // Subitem lead name
           follow_up_date: cols['date_mkzt8vfa'] || '',           // Follow-up date
           stage:          cols['status_Mjj2xjsq'] || '',         // Subitem lead status
-          notes:          cols['text_mm2z7dj3'] || parentUpdate, // Subitem update, fallback to parent's most recent update
+          notes:          stripHtml(cols['text_mm2z7dj3'] || parentUpdate), // Subitem update, fallback to parent's most recent update
           group:          subitem.group?.title || '',             // Group name
           address:        address,
           related:        parentName + (address ? ' · ' + address : ''),
@@ -3162,6 +3165,17 @@ async function fetchCalendarEvents() {
     calEvents = [];
   }
   calInitialized = true; // mark as fetched regardless of success/failure
+}
+
+// ── Strip HTML tags and clean whitespace from update bodies ──
+function stripHtml(str) {
+  if (!str) return '';
+  return str
+    .replace(/<\/p>/gi, ' ')       // replace closing p tags with a space
+    .replace(/<[^>]+>/g, '')       // strip all remaining HTML tags
+    .replace(/\uFEFF/g, '')        // remove zero-width no-break space
+    .replace(/\s+/g, ' ')          // collapse multiple spaces/newlines
+    .trim();
 }
 
 function normalizeEvent(raw) {
@@ -3211,7 +3225,7 @@ function normalizeEvent(raw) {
     stage,
     address,
     related,
-    notes:       raw.notes || raw.last_note || raw.most_recent_note || raw.rationale || '',
+    notes:       stripHtml(raw.notes || raw.last_note || raw.most_recent_note || raw.rationale || ''),
     lead_url,
   };
 }
