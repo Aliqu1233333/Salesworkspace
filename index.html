@@ -3110,15 +3110,50 @@ async function fetchCalendarEvents() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    // Accept various payload shapes from Make.com:
-    //   Array directly              → [{name, follow_up_date, ...}, ...]
-    //   { follow_ups: [...] }       → preferred key
-    //   { records: [...] }          → alternate key
     let raw = [];
-    if (Array.isArray(data))                   raw = data;
-    else if (Array.isArray(data.follow_ups))   raw = data.follow_ups;
-    else if (Array.isArray(data.records))      raw = data.records;
-    else if (Array.isArray(data.items))        raw = data.items;
+
+    if (data?.data?.boards?.[0]?.items_page?.items) {
+      // GraphQL shape from Make.com:
+      // { data: { boards: [{ items_page: { items: [...] } }] } }
+      const items = data.data.boards[0].items_page.items;
+
+      items.forEach(subitem => {
+        // Build column value lookup maps
+        const cols = {};
+        (subitem.column_values || []).forEach(cv => { cols[cv.id] = cv.text; });
+
+        const parent = subitem.parent_item || {};
+        const parentCols = {};
+        (parent.column_values || []).forEach(cv => { parentCols[cv.id] = cv.text; });
+
+        const parentName   = parent.name || '';
+        const address      = parentCols['text5__1'] || '';
+        const parentUpdate = parent.updates?.[0]?.body || '';
+        const parentId     = parent.id || '';
+
+        raw.push({
+          id:             subitem.id,
+          name:           subitem.name,                           // Subitem lead name
+          follow_up_date: cols['date_mkzt8vfa'] || '',           // Follow-up date
+          stage:          cols['status_Mjj2xjsq'] || '',         // Subitem lead status
+          notes:          cols['text_mm2z7dj3'] || parentUpdate, // Subitem update, fallback to parent's most recent update
+          group:          subitem.group?.title || '',             // Group name
+          address:        address,
+          related:        parentName + (address ? ' · ' + address : ''),
+          lead_name:      parentName,                             // Main item lead name
+          lead_url:       parentId
+            ? `https://transparencyfunding.monday.com/boards/9193383085/pulses/${parentId}`
+            : '#',
+        });
+      });
+
+    } else {
+      // Fallback: accept old flat array shapes
+      if (Array.isArray(data))                   raw = data;
+      else if (Array.isArray(data.follow_ups))   raw = data.follow_ups;
+      else if (Array.isArray(data.records))      raw = data.records;
+      else if (Array.isArray(data.items))        raw = data.items;
+    }
 
     calEvents = raw.map(normalizeEvent).filter(e => e && e.date);
     console.log(`Calendar: loaded ${calEvents.length} follow-up(s) from webhook.`);
