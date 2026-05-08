@@ -2538,22 +2538,22 @@ function renderStalledDeals(data) {
   const ring = document.getElementById('stalledDonutRing');
   if (!legend || !totalEl) return;
 
-  // Build reason counts from stalled_deals array (field: dropdown_mkzqf8nk)
+  // Build reason counts from stalled_deals array (field: dropdown_mm1jr7hn)
   // Shape expected: data.stalled_deals = [{ lead_name, stall_reason }, ...]
   // OR data.top_actions with stall_reason field
   const stalledDeals = data.stalled_deals || [];
   const reasonMap = {};
 
   stalledDeals.forEach(d => {
-    const reason = d.stall_reason || d.dropdown_mkzqf8nk || 'Unknown';
+    const reason = d.stall_reason || d.dropdown_mm1jr7hn || 'Unknown';
     reasonMap[reason] = (reasonMap[reason] || 0) + 1;
   });
 
   // Fallback: scan top_actions for stall_reason field
   if (stalledDeals.length === 0 && data.top_actions) {
     data.top_actions.forEach(a => {
-      if (a.stall_reason || a.dropdown_mkzqf8nk) {
-        const reason = a.stall_reason || a.dropdown_mkzqf8nk;
+      if (a.stall_reason || a.dropdown_mm1jr7hn) {
+        const reason = a.stall_reason || a.dropdown_mm1jr7hn;
         reasonMap[reason] = (reasonMap[reason] || 0) + 1;
       }
     });
@@ -2566,9 +2566,9 @@ function renderStalledDeals(data) {
 
   // Store full stalled records for drawer
   _widgetDrawerData.stalled = stalledDeals.length > 0
-    ? stalledDeals.map(d => ({ lead_name: d.lead_name, lead_url: d.lead_url, stall_reason: d.stall_reason || d.dropdown_mkzqf8nk, group: d.group }))
-    : (data.top_actions || []).filter(a => a.stall_reason || a.dropdown_mkzqf8nk)
-        .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, stall_reason: a.stall_reason || a.dropdown_mkzqf8nk, group: a.group }));
+    ? stalledDeals.map(d => ({ lead_name: d.lead_name, lead_url: d.lead_url, stall_reason: d.stall_reason || d.dropdown_mm1jr7hn, group: d.group }))
+    : (data.top_actions || []).filter(a => a.stall_reason || a.dropdown_mm1jr7hn)
+        .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, stall_reason: a.stall_reason || a.dropdown_mm1jr7hn, group: a.group }));
 
   // Update ring color to red-orange (stalled = urgent)
   if (ring) ring.setAttribute('stroke', '#FE5C4C');
@@ -2685,7 +2685,7 @@ function openWidgetDrawer(type) {
       body.innerHTML = records.map(r => `
         <tr>
           <td><a class="widget-drawer-record-link" href="${escapeHtml(r.lead_url || '#')}" target="_blank">${escapeHtml(r.lead_name)}</a></td>
-          <td><span class="widget-drawer-stall-pill">${escapeHtml(r.stall_reason || r.dropdown_mkzqf8nk || '—')}</span></td>
+          <td><span class="widget-drawer-stall-pill">${escapeHtml(r.stall_reason || r.dropdown_mm1jr7hn || '—')}</span></td>
           <td><span class="widget-drawer-group-pill">${escapeHtml(r.group || '—')}</span></td>
         </tr>`).join('');
     }
@@ -2762,7 +2762,7 @@ const DEMO_DATA = {
       "rank": 1,
       "title": "Resolve Stalled Probate Cases",
       "lead_name": "BLACK SUZANNE E",
-      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/18019315294",
+      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/18019315294",
       "group": "Active Follow-Up",
       "disposition_label": "Waiting On Probate",
       "rationale": "6 deals stalled on probate across Active Follow-Up and Long Term Follow Up. BLACK SUZANNE E, ELA DAVILA, STAFFORD JOSEPHINE P are the most active — follow up with attorneys or heirs to unblock. Each day of delay risks losing motivated sellers.",
@@ -2773,7 +2773,7 @@ const DEMO_DATA = {
       "rank": 2,
       "title": "Re-engage Offer Accepted",
       "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
-      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11398529131",
+      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/11398529131",
       "group": "Offer Accepted",
       "disposition_label": "Prioritize Closing",
       "rationale": "Only deal in Offer Accepted. Stall flagged for Cannot Find Owner on a remaining heir. Follow-up due May 18th. Locate outstanding heir to prevent deal from stalling at the finish line.",
@@ -2784,7 +2784,7 @@ const DEMO_DATA = {
       "rank": 3,
       "title": "Push Price on Negotiation Deals",
       "lead_name": "MYERS MARGARET",
-      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/10066148144",
+      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/10066148144",
       "group": "Active Opportunities",
       "disposition_label": "Asking Price Too High",
       "rationale": "3 deals in Negotiation/Review. MYERS MARGARET stalled on price. ROBERT ZABIEREK silent with price objection. BERRY BENNIE FERRELL in Offer Accepted. Present revised numbers or creative terms to break the stalemate.",
@@ -2795,7 +2795,7 @@ const DEMO_DATA = {
       "rank": 4,
       "title": "Contact Family Discussions",
       "lead_name": "WINDOM CLAUDIE ESTATE OF",
-      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11398949663",
+      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/11398949663",
       "group": "Active Opportunities",
       "disposition_label": "Talking To Family",
       "rationale": "WINDOM CLAUDIE and GARCIA VICTOR ORTIZ both stalled while family deliberates. Follow-up due May 7th for WINDOM. Check in to offer clarity, answer objections, and keep momentum while family is still engaged.",
@@ -2806,7 +2806,7 @@ const DEMO_DATA = {
       "rank": 5,
       "title": "Generate Offer for Francisco",
       "lead_name": "RODRIQUEZ FRANCISCO J ESTATE OF",
-      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11184381940",
+      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/11184381940",
       "group": "Long Term Follow Up",
       "disposition_label": "Generate offer",
       "rationale": "Stall reason explicitly flagged as Generate offer. Follow-up was April 24th — already overdue. Run comps, build the offer, and send it before this lead goes cold in Long Term Follow Up.",
@@ -2815,28 +2815,28 @@ const DEMO_DATA = {
     }
   ],
   "stalled_deals": [
-    {"lead_name":"Black Suzanne E","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18019315294","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
-    {"lead_name":"Ela Davila","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10997753021","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
-    {"lead_name":"Stafford Josephine P Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398621431","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
-    {"lead_name":"Dittrich Mary Leiter","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10807293340","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
-    {"lead_name":"Della Roquemore","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11328615849","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
-    {"lead_name":"Robert Staggers","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11236081732","stall_reason":"Waiting On Probate","group":"Active Opportunities"},
-    {"lead_name":"Salvador Guerrero","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11411709032","stall_reason":"Cannot Find Owner","group":"Discovery"},
-    {"lead_name":"Frederick Gilpin","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11624315434","stall_reason":"Cannot Find Owner","group":"Active Follow-Up"},
-    {"lead_name":"Berry Bennie Ferrell Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398529131","stall_reason":"Cannot Find Owner","group":"Offer Accepted"},
-    {"lead_name":"Alonso Patsy H Est Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18044745969","stall_reason":"Cannot contact owner","group":"Discovery"},
-    {"lead_name":"Ulysses Climer","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11057885771","stall_reason":"Cannot contact owner","group":"Active Follow-Up"},
-    {"lead_name":"Rombough Est Terry W","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10752973492","stall_reason":"Cannot contact owner","group":"Active Opportunities"},
-    {"lead_name":"Martinez Gloria Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11503315732","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
-    {"lead_name":"Earnia Williams","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11514358520","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
-    {"lead_name":"Juana Pena","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11499827088","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
-    {"lead_name":"Garcia Victor Ortiz","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10803958405","stall_reason":"Talking To Family","group":"Active Follow-Up"},
-    {"lead_name":"Windom Claudie Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398949663","stall_reason":"Talking To Family","group":"Active Opportunities"},
-    {"lead_name":"Robert Zabierek","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18274918019","stall_reason":"Awaiting Response, Asking Price Too High","group":"Long Term Follow Up"},
-    {"lead_name":"Myers Margaret","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10066148144","stall_reason":"Asking Price Too High","group":"Active Opportunities"},
-    {"lead_name":"Lopez Guadalupe R","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18357266935","stall_reason":"Family Legal Dispute","group":"Active Follow-Up"},
-    {"lead_name":"Banuelos Helen Estate","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11235418675","stall_reason":"Waiting On Legal","group":"Active Opportunities"},
-    {"lead_name":"Rodriquez Francisco J Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11184381940","stall_reason":"Generate offer","group":"Long Term Follow Up"}
+    {"lead_name":"Black Suzanne E","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/18019315294","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Ela Davila","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/10997753021","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Stafford Josephine P Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11398621431","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Dittrich Mary Leiter","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/10807293340","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
+    {"lead_name":"Della Roquemore","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11328615849","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
+    {"lead_name":"Robert Staggers","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11236081732","stall_reason":"Waiting On Probate","group":"Active Opportunities"},
+    {"lead_name":"Salvador Guerrero","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11411709032","stall_reason":"Cannot Find Owner","group":"Discovery"},
+    {"lead_name":"Frederick Gilpin","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11624315434","stall_reason":"Cannot Find Owner","group":"Active Follow-Up"},
+    {"lead_name":"Berry Bennie Ferrell Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11398529131","stall_reason":"Cannot Find Owner","group":"Offer Accepted"},
+    {"lead_name":"Alonso Patsy H Est Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/18044745969","stall_reason":"Cannot contact owner","group":"Discovery"},
+    {"lead_name":"Ulysses Climer","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11057885771","stall_reason":"Cannot contact owner","group":"Active Follow-Up"},
+    {"lead_name":"Rombough Est Terry W","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/10752973492","stall_reason":"Cannot contact owner","group":"Active Opportunities"},
+    {"lead_name":"Martinez Gloria Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11503315732","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Earnia Williams","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11514358520","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Juana Pena","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11499827088","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Garcia Victor Ortiz","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/10803958405","stall_reason":"Talking To Family","group":"Active Follow-Up"},
+    {"lead_name":"Windom Claudie Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11398949663","stall_reason":"Talking To Family","group":"Active Opportunities"},
+    {"lead_name":"Robert Zabierek","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/18274918019","stall_reason":"Awaiting Response, Asking Price Too High","group":"Long Term Follow Up"},
+    {"lead_name":"Myers Margaret","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/10066148144","stall_reason":"Asking Price Too High","group":"Active Opportunities"},
+    {"lead_name":"Lopez Guadalupe R","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/18357266935","stall_reason":"Family Legal Dispute","group":"Active Follow-Up"},
+    {"lead_name":"Banuelos Helen Estate","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11235418675","stall_reason":"Waiting On Legal","group":"Active Opportunities"},
+    {"lead_name":"Rodriquez Francisco J Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/8559048464/pulses/11184381940","stall_reason":"Generate offer","group":"Long Term Follow Up"}
   ]
 };
 
