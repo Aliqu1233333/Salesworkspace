@@ -2019,7 +2019,7 @@
 <!-- DASHBOARD PANEL -->
 <div class="workspace-panel active" id="panelDashboard">
 <div class="top-unified-card" style="display: flex; align-items: center; justify-content: flex-start; gap: 32px; background: #eef2ff; border-radius: 24px; padding: 18px 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #dce4f5; margin-bottom: 16px;"><div class="header-text-block" style="flex: 0 0 460px; min-width: 300px;"><div>
-<div class="top-bar-title" style="font-size: 15px; font-weight: 400; color: #6b7280; margin-bottom: 4px;">Hi, Damian.</div>
+<div class="top-bar-title" style="font-size: 15px; font-weight: 400; color: #6b7280; margin-bottom: 4px;">Hi, Christian.</div>
 <div class="top-bar-title" style="font-size: 34.5px; font-weight: 400;">Sales Workspace</div>
 <div class="top-bar-sub" id="topBarSub" style="font-size: 17px; font-weight: 400; margin-top: 10px;">Loading your pipeline brief…</div>
 </div></div><div class="unified-card-widgets" style="display: flex; gap: 24px; align-items: stretch; flex: 1;"><div class="left-metrics">
@@ -2741,85 +2741,102 @@ function formatDisplayDate(str) {
   } catch { return str; }
 }
 
-// ── Demo data (last real run — live until Make.com responds) ─────────────────
+// ── Demo data (fallback if Make.com webhook is unavailable) ─────────────────
 const DEMO_DATA = {
-  "date": "2026-04-14",
+  "date": "2026-05-08",
   "best_opportunity": {
     "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
-    "summary": "12+ heirs already marked Accepted Offer and the deal is in Offer Accepted — but two agreement tasks are stalling the close. Send Nneka Uzodinma's agreement today (overdue since Apr 13th) and call Kenyatta Lewis to get his signature by Apr 15th. One day of paperwork delay on a multi-heir deal is all it takes for someone to change their mind."
+    "summary": "Currently in Offer Accepted — multiple heirs involved. Follow-up set for May 18th. One stall reason flagged (Cannot Find Owner) on a remaining heir. Priority: resolve outstanding heir contact before deal momentum slips."
   },
   "biggest_risk": {
     "lead_name": "ROBERT ZABIEREK",
-    "summary": "Anthony Joseph holds 100% ownership (confirmed, map complete) with a $144K offer on the table — and has gone silent for 19 days after the last Facebook message. 61 days in Negotiations/Review with a follow-up 59 days overdue. Without outreach today this moves to Long Term Follow Up and momentum dies."
+    "summary": "In Long Term Follow Up with Negotiation/Review status. Stall reason: Awaiting Response + Asking Price Too High. Follow-up set for June 8th. Risk of deal dying without a renewed offer or direct outreach soon."
   },
   "pipeline_summary": {
-    "total_active": 42,
-    "in_negotiation": 5,
+    "total_active": 92,
+    "in_negotiation": 3,
     "interested_in_selling": 9
   },
   "top_actions": [
     {
       "rank": 1,
-      "title": "Send Overdue Agreements",
-      "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
-      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/",
-      "group": "Offer Accepted",
-      "disposition_label": "Prioritize Closing",
-      "rationale": "2 agreement tasks overdue — Nneka Uzodinma since Apr 13th, Kenyatta Lewis due Apr 15th. 12+ heirs aligned. Every day of delay risks a change of heart. Send Nneka's agreement now, call Kenyatta directly.",
-      "suggested_action": "Prepare",
-      "follow_up_date": "Apr 15th",
-      "field_suggestions": [
-        { "update_type_label": "Update Follow-Up Date", "from_value": "Not set", "to_value": "Apr 15, 2026" },
-        { "update_type_label": "Update Next Step", "from_value": "Not set", "to_value": "Send Nneka's agreement; call Kenyatta directly" }
-      ]
+      "title": "Resolve Stalled Probate Cases",
+      "lead_name": "BLACK SUZANNE E",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/18019315294",
+      "group": "Active Follow-Up",
+      "disposition_label": "Waiting On Probate",
+      "rationale": "6 deals stalled on probate across Active Follow-Up and Long Term Follow Up. BLACK SUZANNE E, ELA DAVILA, STAFFORD JOSEPHINE P are the most active — follow up with attorneys or heirs to unblock. Each day of delay risks losing motivated sellers.",
+      "suggested_action": "Follow Up",
+      "follow_up_date": "2026-05-22"
     },
     {
       "rank": 2,
-      "title": "Complete Today's Tasks",
-      "lead_name": "SINER PATRICK F ESTATE OF",
-      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/",
+      "title": "Re-engage Offer Accepted",
+      "lead_name": "BERRY BENNIE FERRELL ESTATE OF",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11398529131",
       "group": "Offer Accepted",
-      "disposition_label": "Missing Next Steps",
-      "rationale": "Merp Form + Seller Info Sheet both due today. Patrick & Dakorey agreed at $90K but 3rd heir Oshae (33%) is incarcerated — SPN 02468773, Public Defender 713-274-8863. Can't close without him.",
+      "disposition_label": "Prioritize Closing",
+      "rationale": "Only deal in Offer Accepted. Stall flagged for Cannot Find Owner on a remaining heir. Follow-up due May 18th. Locate outstanding heir to prevent deal from stalling at the finish line.",
       "suggested_action": "Prepare",
-      "follow_up_date": "Apr 14th",
-      "field_suggestions": [
-        { "update_type_label": "Update Next Step", "from_value": "Not set", "to_value": "Complete Merp Form + Seller Info Sheet today" }
-      ]
+      "follow_up_date": "2026-05-18"
     },
     {
       "rank": 3,
-      "title": "Honor Apr 14th Callback",
-      "lead_name": "REINA QUIROZ",
-      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/",
-      "group": "Active Follow-Up",
-      "disposition_label": "Follow Up Today",
-      "rationale": "Gustavo asked for a callback in one week on Apr 6th — that's today. All 4 owners talking terms, ownership map complete, offer emailed. Victor Hernandez signaled willingness to deed his share. Call now.",
-      "suggested_action": "Follow Up",
-      "follow_up_date": "Apr 14th"
+      "title": "Push Price on Negotiation Deals",
+      "lead_name": "MYERS MARGARET",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/10066148144",
+      "group": "Active Opportunities",
+      "disposition_label": "Asking Price Too High",
+      "rationale": "3 deals in Negotiation/Review. MYERS MARGARET stalled on price. ROBERT ZABIEREK silent with price objection. BERRY BENNIE FERRELL in Offer Accepted. Present revised numbers or creative terms to break the stalemate.",
+      "suggested_action": "Re-engage",
+      "follow_up_date": null
     },
     {
       "rank": 4,
-      "title": "Re-engage 100% Heir",
-      "lead_name": "BANUELOS HELEN ESTATE",
-      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/",
+      "title": "Contact Family Discussions",
+      "lead_name": "WINDOM CLAUDIE ESTATE OF",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11398949663",
       "group": "Active Opportunities",
-      "disposition_label": "One-Call Close",
-      "rationale": "Jorge Banuelos: 100% confirmed owner, $125K offer open, said 'call back in a few weeks' on Feb 26th — 47 days ago. Follow-up 28 days overdue. Attorney clearance pending. Cleanest close in the pipeline.",
-      "suggested_action": "Re-engage",
-      "follow_up_date": null
+      "disposition_label": "Talking To Family",
+      "rationale": "WINDOM CLAUDIE and GARCIA VICTOR ORTIZ both stalled while family deliberates. Follow-up due May 7th for WINDOM. Check in to offer clarity, answer objections, and keep momentum while family is still engaged.",
+      "suggested_action": "Follow Up",
+      "follow_up_date": "2026-05-07"
     },
     {
       "rank": 5,
-      "title": "Break 61-Day Silence",
-      "lead_name": "ROBERT ZABIEREK",
-      "lead_url": "https://transparencyfunding.monday.com/boards/8559048464/pulses/",
-      "group": "Active Opportunities",
-      "disposition_label": "Losing Opportunity",
-      "rationale": "Anthony Joseph: 100% owner, $144K offer (raised from $141K), silent 19 days since Mar 26th Facebook message. 61 days in negotiation, follow-up 59 days overdue. Send a direct message today or this dies.",
-      "suggested_action": "Re-engage",
-      "follow_up_date": null
+      "title": "Generate Offer for Francisco",
+      "lead_name": "RODRIQUEZ FRANCISCO J ESTATE OF",
+      "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/11184381940",
+      "group": "Long Term Follow Up",
+      "disposition_label": "Generate offer",
+      "rationale": "Stall reason explicitly flagged as Generate offer. Follow-up was April 24th — already overdue. Run comps, build the offer, and send it before this lead goes cold in Long Term Follow Up.",
+      "suggested_action": "Prepare",
+      "follow_up_date": "2026-04-24"
     }
+  ],
+  "stalled_deals": [
+    {"lead_name":"Black Suzanne E","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18019315294","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Ela Davila","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10997753021","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Stafford Josephine P Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398621431","stall_reason":"Waiting On Probate","group":"Active Follow-Up"},
+    {"lead_name":"Dittrich Mary Leiter","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10807293340","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
+    {"lead_name":"Della Roquemore","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11328615849","stall_reason":"Waiting On Probate","group":"Long Term Follow Up"},
+    {"lead_name":"Robert Staggers","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11236081732","stall_reason":"Waiting On Probate","group":"Active Opportunities"},
+    {"lead_name":"Salvador Guerrero","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11411709032","stall_reason":"Cannot Find Owner","group":"Discovery"},
+    {"lead_name":"Frederick Gilpin","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11624315434","stall_reason":"Cannot Find Owner","group":"Active Follow-Up"},
+    {"lead_name":"Berry Bennie Ferrell Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398529131","stall_reason":"Cannot Find Owner","group":"Offer Accepted"},
+    {"lead_name":"Alonso Patsy H Est Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18044745969","stall_reason":"Cannot contact owner","group":"Discovery"},
+    {"lead_name":"Ulysses Climer","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11057885771","stall_reason":"Cannot contact owner","group":"Active Follow-Up"},
+    {"lead_name":"Rombough Est Terry W","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10752973492","stall_reason":"Cannot contact owner","group":"Active Opportunities"},
+    {"lead_name":"Martinez Gloria Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11503315732","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Earnia Williams","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11514358520","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Juana Pena","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11499827088","stall_reason":"Not Ready Yet","group":"Long Term Follow Up"},
+    {"lead_name":"Garcia Victor Ortiz","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10803958405","stall_reason":"Talking To Family","group":"Active Follow-Up"},
+    {"lead_name":"Windom Claudie Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11398949663","stall_reason":"Talking To Family","group":"Active Opportunities"},
+    {"lead_name":"Robert Zabierek","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18274918019","stall_reason":"Awaiting Response, Asking Price Too High","group":"Long Term Follow Up"},
+    {"lead_name":"Myers Margaret","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/10066148144","stall_reason":"Asking Price Too High","group":"Active Opportunities"},
+    {"lead_name":"Lopez Guadalupe R","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/18357266935","stall_reason":"Family Legal Dispute","group":"Active Follow-Up"},
+    {"lead_name":"Banuelos Helen Estate","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11235418675","stall_reason":"Waiting On Legal","group":"Active Opportunities"},
+    {"lead_name":"Rodriquez Francisco J Estate Of","lead_url":"https://transparencyfunding.monday.com/boards/9193383085/pulses/11184381940","stall_reason":"Generate offer","group":"Long Term Follow Up"}
   ]
 };
 
@@ -3147,7 +3164,7 @@ async function fetchCalendarEvents() {
           related:        parentName + (address ? ' · ' + address : ''),
           lead_name:      parentName,                             // Main item lead name
           lead_url:       parentId
-            ? `https://transparencyfunding.monday.com/boards/8559048464/pulses/${parentId}`
+            ? `https://transparencyfunding.monday.com/boards/9193383085/pulses/${parentId}`
             : '#',
         });
       });
