@@ -3128,7 +3128,12 @@ async function initCalendar() {
 // ── Fetch from Make.com ───────────────────────────────────────
 async function fetchCalendarEvents() {
   try {
-    const res = await fetch(CALENDAR_WEBHOOK_URL, { cache: 'no-store' });
+    const res = await fetch(CALENDAR_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ board_id: '8559048533' }),
+      cache: 'no-store'
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
