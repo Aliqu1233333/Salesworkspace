@@ -3155,7 +3155,6 @@ async function fetchCalendarEvents() {
 
         const parentName   = toProperCase(parent.name || '');
         const address      = toProperCase(parentCols['text5__1'] || '');
-        const parentUpdate = parent.updates?.[0]?.body || '';
         const parentId     = parent.id || '';
 
         raw.push({
@@ -3163,8 +3162,8 @@ async function fetchCalendarEvents() {
           name:           subitem.name,                           // Subitem lead name
           follow_up_date: cols['date_mkwfwmpj'] || '',           // Follow-up date
           stage:          cols['status_Mjj2xjsq'] || '',         // Subitem lead status
-          notes:          stripHtml(cols['text_mm2zgtff'] || parentUpdate), // Subitem update, fallback to parent's most recent update
-          group:          subitem.group?.title || '',             // Group name
+          notes:          stripHtml(cols['text_mm2zgtff'] || ''),
+          group:          toProperCase(parent.group?.title || ''), // Parent item's board group
           address:        address,
           related:        parentName + (address ? ' · ' + address : ''),
           lead_name:      parentName,                             // Main item lead name
