@@ -2830,6 +2830,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── Action Drawer ──────────────────────────────────────────
 // Monday.com updates are sent via Make.com (token stays server-side, never in this file)
+const GROUP_ID_MAP = {
+  'Actively Pursuing': 'group_mkwarj3a',
+  'Ready to Pursue': 'new_group_mkm279pj',
+  'Discovery': 'new_group_mkm11ry',
+  'Dial NA': 'group_mkv9w3we',
+  'Active Follow-Up': 'group_mksxxv2t',
+  'Active Opportunities': 'group_mkr5b84a',
+  'Long Term Follow Up': 'group_mkrbd7b1',
+  'Offer Accepted': 'group_mkrwc5vx',
+  'Closed & Funded': 'group_mkrndvgd',
+  'Dead Leads': 'new_group_Mjj6If21',
+  'Lost Opportunities': 'group_mkrwqz6'
+};
 const MONDAY_UPDATE_WEBHOOK = 'https://hook.us1.make.com/ngstwscbxu6beeax8ntdpdnef11cwj24'; // Paste your Make.com webhook URL here
 
 let drawerAction = null;
@@ -2999,6 +3012,7 @@ async function applyUpdate(idx) {
         Actioned: true,
         IndexNumber: payload._flatIndex,
         workspace_person: 'Christian',
+        group_id: GROUP_ID_MAP[payload.to_value] || null,
       })
     });
 
