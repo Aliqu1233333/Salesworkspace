@@ -3032,6 +3032,7 @@ async function applyUpdate(idx) {
         Actioned: true,
         IndexNumber: payload._flatIndex,
         workspace_person: 'Damian',
+        group_id: GROUP_ID_MAP[payload.to_value] || null,
       })
     });
 
