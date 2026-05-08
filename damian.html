@@ -2848,6 +2848,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── Action Drawer ──────────────────────────────────────────
 // Monday.com updates are sent via Make.com (token stays server-side, never in this file)
+const GROUP_ID_MAP = {
+  'Discovery': 'group_mm2xck54',
+  'Not Qualified': 'group_mm31gqq1',
+  'Reviewed & Complete': 'group_mm31q1qs',
+  'Ready to Pursue': 'new_group92154__1',
+  'Dial Na': 'new_group_mkm11ry',
+  'Active Follow-Up': 'group_mky79x6q',
+  'Active Opportunities': 'group_mknkxjtm',
+  'Long Term Follow Up': 'group_mkztmakv',
+  'Offer Accepted': 'group_mky9wzc',
+  'Closed and Funded': 'group_mky77tcc',
+  'Not interested in selling': 'new_group21875__1',
+  'Dead Deals': 'group_mm1h3n22',
+  'Amplified Properties': 'group_mm254kke'
+};
 const MONDAY_UPDATE_WEBHOOK = 'https://hook.us1.make.com/ngstwscbxu6beeax8ntdpdnef11cwj24'; // Paste your Make.com webhook URL here
 
 let drawerAction = null;
