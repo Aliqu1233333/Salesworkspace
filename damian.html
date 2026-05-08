@@ -3156,15 +3156,15 @@ async function fetchCalendarEvents() {
         raw.push({
           id:             subitem.id,
           name:           subitem.name,                           // Subitem lead name
-          follow_up_date: cols['date_mkzt8vfa'] || '',           // Follow-up date
+          follow_up_date: cols['date_mkwfwmpj'] || '',           // Follow-up date
           stage:          cols['status_Mjj2xjsq'] || '',         // Subitem lead status
-          notes:          stripHtml(cols['text_mm2z7dj3'] || parentUpdate), // Subitem update, fallback to parent's most recent update
+          notes:          stripHtml(cols['text_mm2zgtff'] || parentUpdate), // Subitem update, fallback to parent's most recent update
           group:          subitem.group?.title || '',             // Group name
           address:        address,
           related:        parentName + (address ? ' · ' + address : ''),
           lead_name:      parentName,                             // Main item lead name
           lead_url:       parentId
-            ? `https://transparencyfunding.monday.com/boards/9193383085/pulses/${parentId}`
+            ? `https://transparencyfunding.monday.com/boards/8559048464/pulses/${parentId}`
             : '#',
         });
       });
