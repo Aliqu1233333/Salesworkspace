@@ -3042,12 +3042,17 @@ async function applyUpdate(idx) {
     let responseData = {};
     try { responseData = await res.json(); } catch(e) {}
 
-    if (responseData.Actioned === true && responseData.IndexNumber != null) {
+    // BUG FIX 1: Make.com returns Actioned as the string "true", not boolean true.
+    // BUG FIX 2: IndexNumber also comes back as a string — coerce to Number so
+    //            existing.includes() matches correctly against stored numbers.
+    const actionedConfirmed = responseData.Actioned === true || responseData.Actioned === 'true';
+    const indexNumber = responseData.IndexNumber != null ? Number(responseData.IndexNumber) : null;
+
+    if (actionedConfirmed && indexNumber != null) {
       const key = 'actioned_' + currentBriefDate;
       const existing = JSON.parse(localStorage.getItem(key) || '[]');
-      const actionIdx = responseData.IndexNumber;
-      if (!existing.includes(actionIdx)) {
-        existing.push(actionIdx);
+      if (!existing.includes(indexNumber)) {
+        existing.push(indexNumber);
         localStorage.setItem(key, JSON.stringify(existing));
       }
       // Decrement badge on action row - keep the row itself visible
@@ -3064,9 +3069,18 @@ async function applyUpdate(idx) {
           }
         }
       }
+    } else if (!actionedConfirmed) {
+      // BUG FIX 3: If Make.com didn't confirm actioned, log a warning so the
+      //            developer can see it, but still show success UI since the
+      //            Monday.com update itself did go through (res.ok was true).
+      //            The actioned index just won't be persisted this round.
+      console.warn('[Workspace] Make.com response did not confirm Actioned. Response was:', responseData,
+        '\nExpected: { "Actioned": true, "IndexNumber": <number> }. ' +
+        'Check your Make.com scenario return data mapping.');
     }
 
-    // Show inline success, then remove just this card from the drawer
+    // BUG FIX 3 (continued): Show inline success — this correctly runs after the
+    // actioned block so the UI only reaches here when the webhook call itself succeeded.
     const cardBody = document.getElementById('drawerCardBody_' + idx);
     cardBody.querySelector('.drawer-card-actions').style.display = 'none';
     cardBody.querySelector('.drawer-monday-link').style.display = 'none';
