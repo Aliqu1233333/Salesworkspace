@@ -2587,7 +2587,7 @@ function renderFollowUps(data) {
     const isOverdue = ms < overdueCutoff.getTime();
     const isUpcoming = ms >= todayDate.getTime() && ms <= weekDate.getTime();
     return isOverdue || isUpcoming;
-  }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group }))
+  }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group, action_step: a.action_step || a.next_action || a.next_step || a.notes || '' }))
   .sort((a, b) => toMs(a.follow_up_date) - toMs(b.follow_up_date));
 
   // Render donut as proportional segments matching the legend colors/order
@@ -2641,9 +2641,9 @@ function renderStalledDeals(data) {
 
   // Store full stalled records for drawer
   _widgetDrawerData.stalled = stalledDeals.length > 0
-    ? stalledDeals.map(d => ({ lead_name: d.lead_name, lead_url: d.lead_url, stall_reason: d.stall_reason || d.dropdown_mkzqf8nk, group: d.group }))
+    ? stalledDeals.map(d => ({ lead_name: d.lead_name, lead_url: d.lead_url, stall_reason: d.stall_reason || d.dropdown_mkzqf8nk, group: d.group, last_updated: d.last_updated || d.updated_at || d.last_modified || d.date || '' }))
     : (data.top_actions || []).filter(a => a.stall_reason || a.dropdown_mkzqf8nk)
-        .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, stall_reason: a.stall_reason || a.dropdown_mkzqf8nk, group: a.group }));
+        .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, stall_reason: a.stall_reason || a.dropdown_mkzqf8nk, group: a.group, last_updated: a.last_updated || a.updated_at || a.last_modified || a.date || '' }));
 
   if (reasons.length === 0) {
     // Demo fallback so it looks populated until real data arrives
@@ -2721,8 +2721,13 @@ function openWidgetDrawer(type) {
     let records = _widgetDrawerData.followups || [];
     title.innerHTML = `Upcoming &amp; overdue next actions <span class="widget-drawer-count-badge">${records.length}</span>`;
     subtitle.textContent = 'Overdue by 3+ days and due within the next 7 days, by follow-up date — sorted soonest first';
-    // Helper: tag a follow-up date string with a colored badge
-    const _fuNow = new Date(); _fuNow.setHours(12,0,0,0);
+    // Helper: tag a follow-up date string with a colored badge.
+    // Reference "today" is the brief's date (currentBriefDate), not the live
+    // clock, so day-counts match the widget's bucketing.
+    const _fuNow = (currentBriefDate && /^\d{4}-\d{2}-\d{2}$/.test(currentBriefDate))
+      ? new Date(currentBriefDate + 'T12:00:00')
+      : new Date();
+    _fuNow.setHours(12,0,0,0);
     const _fuOverdueCutoff = new Date(_fuNow.getTime() - 3*86400000);
     const _fuWeekOut = new Date(_fuNow.getTime() + 7*86400000);
     function _fuTag(dateStr) {
@@ -2739,18 +2744,20 @@ function openWidgetDrawer(type) {
     }
     head.innerHTML = `<tr>
       <th>Record name</th>
-      <th>Follow-up date</th>
       <th>When</th>
+      <th>Action date</th>
+      <th>Action step</th>
       <th>Group</th>
     </tr>`;
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="4"><div class="widget-drawer-empty">No follow-ups found for the next 7 days.</div></td></tr>`;
+      body.innerHTML = `<tr><td colspan="5"><div class="widget-drawer-empty">No follow-ups found for the next 7 days.</div></td></tr>`;
     } else {
       body.innerHTML = records.map(r => `
         <tr>
           <td><a class="widget-drawer-record-link" href="${escapeHtml(r.lead_url || '#')}" target="_blank">${escapeHtml(r.lead_name)}</a></td>
-          <td><span class="widget-drawer-date">${escapeHtml(formatDisplayDate(r.follow_up_date) || '—')}</span></td>
           <td>${_fuTag(r.follow_up_date)}</td>
+          <td><span class="widget-drawer-date">${escapeHtml(formatDisplayDate(r.follow_up_date) || '—')}</span></td>
+          <td>${escapeHtml(r.action_step || '—')}</td>
           <td><span class="widget-drawer-group-pill">${escapeHtml(r.group || '—')}</span></td>
         </tr>`).join('');
     }
@@ -2762,15 +2769,17 @@ function openWidgetDrawer(type) {
       <th>Record name</th>
       <th>Stalled reason</th>
       <th>Group</th>
+      <th>Last updated</th>
     </tr>`;
     if (records.length === 0) {
-      body.innerHTML = `<tr><td colspan="3"><div class="widget-drawer-empty">No stalled deals found.</div></td></tr>`;
+      body.innerHTML = `<tr><td colspan="4"><div class="widget-drawer-empty">No stalled deals found.</div></td></tr>`;
     } else {
       body.innerHTML = records.map(r => `
         <tr>
           <td><a class="widget-drawer-record-link" href="${escapeHtml(r.lead_url || '#')}" target="_blank">${escapeHtml(r.lead_name)}</a></td>
           <td><span class="widget-drawer-stall-pill">${escapeHtml(r.stall_reason || r.dropdown_mkzqf8nk || '—')}</span></td>
           <td><span class="widget-drawer-group-pill">${escapeHtml(r.group || '—')}</span></td>
+          <td><span class="widget-drawer-date">${escapeHtml(formatDisplayDate(r.last_updated) || '—')}</span></td>
         </tr>`).join('');
     }
   }
@@ -2813,16 +2822,28 @@ function formatDate(dateStr) {
 
 function formatDisplayDate(str) {
   if (!str) return '';
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-  try {
-    const d = new Date(str + 'T12:00:00');
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const day = d.getDate();
-    const suffix = (day === 1 || day === 21 || day === 31) ? 'st'
-                 : (day === 2 || day === 22) ? 'nd'
-                 : (day === 3 || day === 23) ? 'rd' : 'th';
-    return months[d.getMonth()] + ' ' + day + suffix;
-  } catch { return str; }
+  // Strict date (YYYY-MM-DD)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    try {
+      const d = new Date(str + 'T12:00:00');
+      return _fmtMonthDay(d);
+    } catch { return str; }
+  }
+  // ISO timestamp (e.g. 2026-04-10T14:32:00Z) — common for "last updated"
+  if (/^\d{4}-\d{2}-\d{2}T/.test(str)) {
+    const d = new Date(str);
+    if (!isNaN(d)) return _fmtMonthDay(d);
+  }
+  return str;
+}
+
+function _fmtMonthDay(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const day = d.getDate();
+  const suffix = (day === 1 || day === 21 || day === 31) ? 'st'
+               : (day === 2 || day === 22) ? 'nd'
+               : (day === 3 || day === 23) ? 'rd' : 'th';
+  return months[d.getMonth()] + ' ' + day + suffix;
 }
 
 // ── Demo data (last real run — live until Make.com responds) ─────────────────
@@ -2852,6 +2873,7 @@ const DEMO_DATA = {
       "rationale": "2 agreement tasks overdue — Nneka Uzodinma since Apr 13th, Kenyatta Lewis due Apr 15th. 12+ heirs aligned. Every day of delay risks a change of heart. Send Nneka's agreement now, call Kenyatta directly.",
       "suggested_action": "Prepare",
       "follow_up_date": "Apr 15th",
+      "action_step": "Send Nneka's agreement; call Kenyatta directly",
       "field_suggestions": [
         { "update_type_label": "Update Follow-Up Date", "from_value": "Not set", "to_value": "Apr 15, 2026" },
         { "update_type_label": "Update Next Step", "from_value": "Not set", "to_value": "Send Nneka's agreement; call Kenyatta directly" }
@@ -2904,6 +2926,18 @@ const DEMO_DATA = {
       "suggested_action": "Re-engage",
       "follow_up_date": null
     }
+  ],
+  "stalled_deals": [
+    { "lead_name": "BERRY BENNIE FERRELL ESTATE OF", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "stall_reason": "Waiting On Probate", "group": "Active Opportunities", "last_updated": "2026-04-02" },
+    { "lead_name": "SINER PATRICK F ESTATE OF", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "stall_reason": "Waiting On Probate", "group": "Offer Accepted", "last_updated": "2026-03-28" },
+    { "lead_name": "REINA QUIROZ", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "stall_reason": "Can't Contact Owner", "group": "Active Follow-Up", "last_updated": "2026-04-05" },
+    { "lead_name": "ROBERT ZABIEREK", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "stall_reason": "Waiting On Response", "group": "Active Opportunities", "last_updated": "2026-03-26" }
+  ],
+  "recent_records": [
+    { "lead_name": "REINA QUIROZ", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "follow_up_date": "2026-04-14", "group": "Active Follow-Up", "action_step": "Honor callback — all 4 owners talking terms" },
+    { "lead_name": "SINER PATRICK F ESTATE OF", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "follow_up_date": "2026-04-16", "group": "Offer Accepted", "action_step": "Complete Merp Form + Seller Info Sheet" },
+    { "lead_name": "BERRY BENNIE FERRELL ESTATE OF", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "follow_up_date": "2026-04-08", "group": "Offer Accepted", "action_step": "Send Nneka's agreement; call Kenyatta directly" },
+    { "lead_name": "BANUELOS HELEN ESTATE", "lead_url": "https://transparencyfunding.monday.com/boards/9193383085/pulses/", "follow_up_date": "2026-04-18", "group": "Active Opportunities", "action_step": "Re-engage 100% heir on $125K offer" }
   ]
 };
 
