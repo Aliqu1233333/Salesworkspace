@@ -2061,10 +2061,6 @@
         <div class="sf-legend-pill" style="background:#bcf5e8; color:#339a87;"><span id="followupUpcoming">0</span> Upcoming Actions</div>
       </div>
       <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#1b96ff;"></div>
-        <div class="sf-legend-pill" style="background:#E1F0FD; color:#1763A5;"><span id="followupNone">0</span> No Actions Set</div>
-      </div>
-      <div class="sf-legend-item">
         <div class="sf-legend-dot" style="background:#FE5C4C;"></div>
         <div class="sf-legend-pill" style="background:#FDE4E1; color:#CA3831;"><span id="followupOverdue">0</span> Overdue Actions</div>
       </div>
@@ -2525,76 +2521,58 @@ function renderDonutSegments(groupId, segments) {
 }
 
 // ── Upcoming & Overdue Next Actions donut widget ───────────
+// Only counts records that have BOTH a next_action_step AND a follow_up_date.
+// Records missing either field are excluded — no "No Actions Set" bucket.
 function renderFollowUps(data) {
-  const actions = data.top_actions || [];
   const todayStr = data.date || new Date().toISOString().split('T')[0];
   const todayDate = new Date(todayStr + 'T12:00:00');
   const weekDate = new Date(todayDate); weekDate.setDate(todayDate.getDate() + 7);
   const overdueCutoff = new Date(todayDate); overdueCutoff.setDate(todayDate.getDate() - 3);
 
-  // Buckets driven off follow_up_date:
-  //   overdue   = follow-up date is more than 3 days in the past (stale, needs rescue)
-  //   upcoming  = follow-up date falls within today → today+7 (coming due soon)
-  //   no action = no follow-up date set at all (needs a next step scheduled)
-  let countOverdue = 0, countUpcoming = 0, countNone = 0;
+  const toMs = s => {
+    if (!s) return Infinity;
+    const iso = String(s).match(/^\d{4}-\d{2}-\d{2}$/);
+    if (iso) return new Date(s + 'T12:00:00').getTime();
+    const p = new Date(s + ' ' + todayDate.getFullYear());
+    return isNaN(p) ? Infinity : p.getTime();
+  };
 
-  const allRecords = [...(data.recent_records || []), ...actions];
+  let countOverdue = 0, countUpcoming = 0;
   const seen = new Set();
 
-  allRecords.forEach(a => {
+  (data.recent_records || []).forEach(a => {
+    // Must have both next_action_step and follow_up_date to count
+    if (!a.next_action_step || !a.follow_up_date) return;
     const key = a.lead_name;
     if (seen.has(key)) return;
     seen.add(key);
 
-    if (!a.follow_up_date) { countNone++; return; }
+    const ms = toMs(a.follow_up_date);
+    if (ms === Infinity) return;
 
-    let d = null;
-    const iso = String(a.follow_up_date).match(/^\d{4}-\d{2}-\d{2}$/);
-    if (iso) {
-      d = new Date(a.follow_up_date + 'T12:00:00');
-    } else {
-      const parsed = new Date(a.follow_up_date + ' ' + todayDate.getFullYear());
-      if (!isNaN(parsed)) d = parsed;
-    }
-    if (!d || isNaN(d)) { countNone++; return; }
-
-    const dTime = d.getTime();
-    if (dTime < overdueCutoff.getTime()) countOverdue++;
-    else if (dTime >= todayDate.getTime() && dTime <= weekDate.getTime()) countUpcoming++;
+    if (ms < overdueCutoff.getTime()) countOverdue++;
+    else if (ms >= todayDate.getTime() && ms <= weekDate.getTime()) countUpcoming++;
+    // Between overdueCutoff and today (1-2 days past) → not counted by design
   });
 
-  // Fallback demo counts — if real follow-up dates didn't populate the
-  // overdue/upcoming buckets, seed a representative spread so all three
-  // segments are visible in the demo.
-  if (countOverdue === 0 && countUpcoming === 0) {
-    countOverdue = 2;
-    countUpcoming = 4;
-    if (countNone === 0) countNone = 2;
-  }
-
-  const total = countOverdue + countUpcoming + countNone;
-  document.getElementById('followupTotal').textContent = total || '0';
-  document.getElementById('followupOverdue').textContent = countOverdue;
+  const total = countUpcoming + countOverdue;
+  document.getElementById('followupTotal').textContent   = total || '0';
   document.getElementById('followupUpcoming').textContent = countUpcoming;
-  document.getElementById('followupNone').textContent = countNone;
+  document.getElementById('followupOverdue').textContent  = countOverdue;
 
-  // Store for drawer — overdue (3+ days) through upcoming (today+7), sorted soonest first
-  const toMs = s => { const iso = String(s).match(/^\d{4}-\d{2}-\d{2}$/); if (iso) return new Date(s + 'T12:00:00').getTime(); const p = new Date(s + ' ' + todayDate.getFullYear()); return isNaN(p) ? Infinity : p.getTime(); };
-  _widgetDrawerData.followups = allRecords.filter(a => {
-    if (!a.follow_up_date) return false;
-    const ms = toMs(a.follow_up_date);
-    if (ms === Infinity) return false;
-    const isOverdue = ms < overdueCutoff.getTime();
-    const isUpcoming = ms >= todayDate.getTime() && ms <= weekDate.getTime();
-    return isOverdue || isUpcoming;
-  }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group, action_step: a.action_step || a.next_action || a.next_step || a.notes || '' }))
-  .sort((a, b) => toMs(a.follow_up_date) - toMs(b.follow_up_date));
+  // Store for drawer — same eligibility rules, sorted soonest first
+  _widgetDrawerData.followups = (data.recent_records || [])
+    .filter(a => a.next_action_step && a.follow_up_date
+              && toMs(a.follow_up_date) !== Infinity
+              && (toMs(a.follow_up_date) < overdueCutoff.getTime() ||
+                 (toMs(a.follow_up_date) >= todayDate.getTime() && toMs(a.follow_up_date) <= weekDate.getTime())))
+    .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, next_action_step: a.next_action_step, group: a.group }))
+    .sort((a, b) => toMs(a.follow_up_date) - toMs(b.follow_up_date));
 
-  // Render donut as proportional segments matching the legend colors/order
+  // Render donut segments (two segments only)
   renderDonutSegments('followupDonutSegments', [
-    { value: countUpcoming, color: '#bcf5e8' }, // Upcoming (next 7 days)
-    { value: countNone,     color: '#1b96ff' }, // No actions set
-    { value: countOverdue,  color: '#FE5C4C' }, // Overdue (3+ days)
+    { value: countUpcoming, color: '#bcf5e8' }, // Upcoming (today → +7 days)
+    { value: countOverdue,  color: '#FE5C4C' }, // Overdue (3+ days past)
   ]);
 }
 
@@ -2757,7 +2735,7 @@ function openWidgetDrawer(type) {
           <td><a class="widget-drawer-record-link" href="${escapeHtml(r.lead_url || '#')}" target="_blank">${escapeHtml(r.lead_name)}</a></td>
           <td>${_fuTag(r.follow_up_date)}</td>
           <td><span class="widget-drawer-date">${escapeHtml(formatDisplayDate(r.follow_up_date) || '—')}</span></td>
-          <td>${escapeHtml(r.action_step || '—')}</td>
+          <td>${r.next_action_step ? `<span class="widget-drawer-action-pill">${escapeHtml(r.next_action_step)}</span>` : '<span style="color:#9ca3af;font-size:13px;">—</span>'}</td>
           <td><span class="widget-drawer-group-pill">${escapeHtml(r.group || '—')}</span></td>
         </tr>`).join('');
     }
