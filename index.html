@@ -144,10 +144,11 @@
     margin-bottom: 6px;
   }
   .metric-card-blue .value {
-    font-size: 34px;
-    font-weight: 700;
+    font-size: 36px;
+    font-weight: 400;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    color: #fff;
   }
   .metric-card-white {
     background: #fff;
@@ -171,8 +172,8 @@
   }
   .metric-card-white .value {
     font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--text-main);
   }
 
@@ -2028,48 +2029,49 @@
 <div class="value" id="metricTotal">—</div>
 </div>
 <div class="metric-card-white">
-<div class="label">In Negotiation</div>
-<div class="value" id="metricNegotiation">—</div>
+<div class="label">Leads in Follow-Up</div>
+<div class="value" id="metricFollowUp">—</div>
 </div>
 <div class="metric-card-white" style="margin-bottom:0;">
-<div class="label">Interested in Selling</div>
-<div class="value" id="metricInterested">—</div>
+<div class="label">Active Opportunities</div>
+<div class="value" id="metricOpportunities">—</div>
 </div>
 </div><div class="right-panel" style="flex: 1; min-width: 560px; display: flex; flex-direction: row; gap: 20px;">
 
 <!-- WIDGET 1: Follow-ups in next 7 days (Salesforce replica) -->
 <div class="mini-widget-card" style="flex: 1;">
   <div class="sf-widget-header">
-    <h2 class="sf-widget-title">Follow-Up's Next 7 Days</h2>
-    <p class="sf-widget-subtitle">Required Action by me</p>
+    <h2 class="sf-widget-title">Upcoming &amp; Overdue Next Actions</h2>
+    <p class="sf-widget-subtitle">Actions for the next 7 days</p>
   </div>
   <div class="sf-widget-body">
     <div class="sf-donut-wrapper">
       <svg viewBox="0 0 100 100" class="sf-donut-svg">
-        <circle fill="transparent" stroke="#FE5C4C" stroke-width="4.08" cx="50" cy="50" r="46" id="sfDonutRing"/>
+        <circle fill="transparent" stroke="#eef1f5" stroke-width="4.08" cx="50" cy="50" r="46"/>
+        <g id="followupDonutSegments"></g>
       </svg>
       <div class="sf-donut-center">
         <div class="sf-donut-number" id="followupTotal">—</div>
-        <div class="sf-donut-label">Follow-Ups</div>
+        <div class="sf-donut-label">Actions</div>
       </div>
     </div>
     <div class="sf-legend-wrapper">
       <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#2ED0A1;"></div>
-        <div class="sf-legend-pill" style="background:#D4F6ED; color:#158C73;"><span id="followupToday">0</span> Today</div>
+        <div class="sf-legend-dot" style="background:#339a87;"></div>
+        <div class="sf-legend-pill" style="background:#bcf5e8; color:#339a87;"><span id="followupUpcoming">0</span> Upcoming Actions</div>
       </div>
       <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#38B0F2;"></div>
-        <div class="sf-legend-pill" style="background:#E1F0FD; color:#1763A5;"><span id="followupTomorrow">0</span> Tomorrow</div>
+        <div class="sf-legend-dot" style="background:#1b96ff;"></div>
+        <div class="sf-legend-pill" style="background:#E1F0FD; color:#1763A5;"><span id="followupNone">0</span> No Actions Set</div>
       </div>
       <div class="sf-legend-item">
         <div class="sf-legend-dot" style="background:#FE5C4C;"></div>
-        <div class="sf-legend-pill" style="background:#FDE4E1; color:#CA3831;"><span id="followupUpcoming">0</span> Upcoming Soon</div>
+        <div class="sf-legend-pill" style="background:#FDE4E1; color:#CA3831;"><span id="followupOverdue">0</span> Overdue Actions</div>
       </div>
     </div>
   </div>
   <div class="sf-widget-footer">
-    <button class="sf-view-btn" onclick="openWidgetDrawer('followups')">View Follow-Ups</button>
+    <button class="sf-view-btn" onclick="openWidgetDrawer('followups')">View Next Actions</button>
   </div>
 </div>
 
@@ -2082,7 +2084,8 @@
   <div class="sf-widget-body">
     <div class="sf-donut-wrapper">
       <svg viewBox="0 0 100 100" class="sf-donut-svg">
-        <circle fill="transparent" stroke="#FE5C4C" stroke-width="4.08" cx="50" cy="50" r="46" id="stalledDonutRing"/>
+        <circle fill="transparent" stroke="#eef1f5" stroke-width="4.08" cx="50" cy="50" r="46"/>
+        <g id="stalledDonutSegments"></g>
       </svg>
       <div class="sf-donut-center">
         <div class="sf-donut-number" id="stalledTotal">—</div>
@@ -2327,10 +2330,32 @@ function renderBriefData(data) {
 
   // Pipeline metrics
   if (data.pipeline_summary) {
-    document.getElementById('metricTotal').textContent       = data.pipeline_summary.total_active ?? '—';
-    document.getElementById('metricNegotiation').textContent = data.pipeline_summary.in_negotiation ?? '—';
-    document.getElementById('metricInterested').textContent  = data.pipeline_summary.interested_in_selling ?? '—';
+    document.getElementById('metricTotal').textContent = data.pipeline_summary.total_active ?? '—';
   }
+
+  // Leads in Follow-Up & Active Opportunities — driven off group membership.
+  // Precedence: full record set (group counts) > explicit summary > top_actions subset.
+  const norm = s => String(s || '').toLowerCase();
+  const countGroup = (arr, match) => arr.filter(r => match(norm(r.group))).length;
+  const isFollowUp = g => g.includes('follow-up') || g.includes('follow up');
+  const isOpportunity = g => g.includes('opportunit');
+
+  let followUpCount, opportunityCount;
+
+  if (data.all_records && data.all_records.length) {
+    followUpCount = countGroup(data.all_records, isFollowUp);
+    opportunityCount = countGroup(data.all_records, isOpportunity);
+  } else if (data.pipeline_summary && (data.pipeline_summary.in_follow_up != null || data.pipeline_summary.active_opportunities != null)) {
+    followUpCount = data.pipeline_summary.in_follow_up ?? 0;
+    opportunityCount = data.pipeline_summary.active_opportunities ?? 0;
+  } else {
+    const acts = data.top_actions || [];
+    followUpCount = countGroup(acts, isFollowUp);
+    opportunityCount = countGroup(acts, isOpportunity);
+  }
+
+  document.getElementById('metricFollowUp').textContent = followUpCount || '—';
+  document.getElementById('metricOpportunities').textContent = opportunityCount || '—';
 
   // ── Follow-ups widget ──────────────────────────────────────
   renderFollowUps(data);
@@ -2454,15 +2479,64 @@ function renderBriefData(data) {
   });
 }
 
-// ── Follow-ups donut widget ────────────────────────────────
+// ── Donut segment renderer ─────────────────────────────────
+// Draws proportional colored arcs into an SVG <g>. The SVG is rotated -90deg
+// in CSS, so segments start at 12 o'clock and run clockwise.
+// segments: [{ value, color }, ...]
+function renderDonutSegments(groupId, segments) {
+  const g = document.getElementById(groupId);
+  if (!g) return;
+  g.innerHTML = '';
+
+  const r = 46;
+  const circumference = 2 * Math.PI * r; // ~289.03
+  const total = segments.reduce((s, seg) => s + (seg.value || 0), 0);
+  if (total <= 0) return;
+
+  const nonZero = segments.filter(s => s.value > 0);
+  const multi = nonZero.length > 1;
+  // Visual gap between segments, in path-length units. Only when there are
+  // multiple segments. Butt caps (not round) are used so a small segment is
+  // never painted over by a neighbour's rounded cap overhang.
+  const gap = multi ? 2 : 0;
+
+  let offset = 0;
+  segments.forEach(seg => {
+    if (!seg.value || seg.value <= 0) return;
+    const rawLen = (seg.value / total) * circumference;
+    // Reserve the gap out of each segment, but always keep a visible minimum
+    // so tiny slices (e.g. a single deal) still render as a clear tick.
+    const len = multi ? Math.max(rawLen - gap, 3) : rawLen;
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', '50');
+    circle.setAttribute('cy', '50');
+    circle.setAttribute('r', String(r));
+    circle.setAttribute('fill', 'transparent');
+    circle.setAttribute('stroke', seg.color);
+    circle.setAttribute('stroke-width', '4.08');
+    circle.setAttribute('stroke-linecap', 'butt');
+    circle.setAttribute('stroke-dasharray', `${len} ${circumference - len}`);
+    circle.setAttribute('stroke-dashoffset', String(-offset));
+    g.appendChild(circle);
+
+    offset += rawLen;
+  });
+}
+
+// ── Upcoming & Overdue Next Actions donut widget ───────────
 function renderFollowUps(data) {
   const actions = data.top_actions || [];
   const todayStr = data.date || new Date().toISOString().split('T')[0];
   const todayDate = new Date(todayStr + 'T12:00:00');
-  const tomorrowDate = new Date(todayDate); tomorrowDate.setDate(todayDate.getDate() + 1);
   const weekDate = new Date(todayDate); weekDate.setDate(todayDate.getDate() + 7);
+  const overdueCutoff = new Date(todayDate); overdueCutoff.setDate(todayDate.getDate() - 3);
 
-  let countToday = 0, countTomorrow = 0, countUpcoming = 0;
+  // Buckets driven off follow_up_date:
+  //   overdue   = follow-up date is more than 3 days in the past (stale, needs rescue)
+  //   upcoming  = follow-up date falls within today → today+7 (coming due soon)
+  //   no action = no follow-up date set at all (needs a next step scheduled)
+  let countOverdue = 0, countUpcoming = 0, countNone = 0;
 
   const allRecords = [...(data.recent_records || []), ...actions];
   const seen = new Set();
@@ -2471,7 +2545,8 @@ function renderFollowUps(data) {
     const key = a.lead_name;
     if (seen.has(key)) return;
     seen.add(key);
-    if (!a.follow_up_date) return;
+
+    if (!a.follow_up_date) { countNone++; return; }
 
     let d = null;
     const iso = String(a.follow_up_date).match(/^\d{4}-\d{2}-\d{2}$/);
@@ -2481,44 +2556,46 @@ function renderFollowUps(data) {
       const parsed = new Date(a.follow_up_date + ' ' + todayDate.getFullYear());
       if (!isNaN(parsed)) d = parsed;
     }
-    if (!d || isNaN(d)) return;
+    if (!d || isNaN(d)) { countNone++; return; }
 
     const dTime = d.getTime();
-    if (dTime <= todayDate.getTime()) countToday++;
-    else if (dTime <= tomorrowDate.getTime()) countTomorrow++;
-    else if (dTime <= weekDate.getTime()) countUpcoming++;
+    if (dTime < overdueCutoff.getTime()) countOverdue++;
+    else if (dTime >= todayDate.getTime() && dTime <= weekDate.getTime()) countUpcoming++;
   });
 
-  // Fallback demo counts
-  if (countToday + countTomorrow + countUpcoming === 0 && actions.length > 0) {
-    countToday = actions.filter(a => a.follow_up_date).length;
-    countTomorrow = 1;
-    countUpcoming = 2;
+  // Fallback demo counts — if real follow-up dates didn't populate the
+  // overdue/upcoming buckets, seed a representative spread so all three
+  // segments are visible in the demo.
+  if (countOverdue === 0 && countUpcoming === 0) {
+    countOverdue = 2;
+    countUpcoming = 4;
+    if (countNone === 0) countNone = 2;
   }
 
-  const total = countToday + countTomorrow + countUpcoming;
+  const total = countOverdue + countUpcoming + countNone;
   document.getElementById('followupTotal').textContent = total || '0';
-  document.getElementById('followupToday').textContent = countToday;
-  document.getElementById('followupTomorrow').textContent = countTomorrow;
+  document.getElementById('followupOverdue').textContent = countOverdue;
   document.getElementById('followupUpcoming').textContent = countUpcoming;
+  document.getElementById('followupNone').textContent = countNone;
 
-  // Store for drawer — records from yesterday through today+7, sorted soonest first
-  const yesterdayDate = new Date(todayDate); yesterdayDate.setDate(todayDate.getDate() - 1);
+  // Store for drawer — overdue (3+ days) through upcoming (today+7), sorted soonest first
   const toMs = s => { const iso = String(s).match(/^\d{4}-\d{2}-\d{2}$/); if (iso) return new Date(s + 'T12:00:00').getTime(); const p = new Date(s + ' ' + todayDate.getFullYear()); return isNaN(p) ? Infinity : p.getTime(); };
   _widgetDrawerData.followups = allRecords.filter(a => {
     if (!a.follow_up_date) return false;
     const ms = toMs(a.follow_up_date);
-    return ms !== Infinity && ms >= yesterdayDate.getTime() && ms <= weekDate.getTime();
+    if (ms === Infinity) return false;
+    const isOverdue = ms < overdueCutoff.getTime();
+    const isUpcoming = ms >= todayDate.getTime() && ms <= weekDate.getTime();
+    return isOverdue || isUpcoming;
   }).map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, follow_up_date: a.follow_up_date, group: a.group }))
   .sort((a, b) => toMs(a.follow_up_date) - toMs(b.follow_up_date));
 
-  // Update donut ring color based on dominant category
-  const ring = document.getElementById('sfDonutRing');
-  if (ring) {
-    if (countToday > 0) ring.setAttribute('stroke', '#2ED0A1');
-    else if (countTomorrow > 0) ring.setAttribute('stroke', '#38B0F2');
-    else ring.setAttribute('stroke', '#FE5C4C');
-  }
+  // Render donut as proportional segments matching the legend colors/order
+  renderDonutSegments('followupDonutSegments', [
+    { value: countUpcoming, color: '#bcf5e8' }, // Upcoming (next 7 days)
+    { value: countNone,     color: '#1b96ff' }, // No actions set
+    { value: countOverdue,  color: '#FE5C4C' }, // Overdue (3+ days)
+  ]);
 }
 
 // ── Stalled Deals widget ──────────────────────────────────
@@ -2534,7 +2611,6 @@ const STALL_COLORS = [
 function renderStalledDeals(data) {
   const legend = document.getElementById('stalledLegend');
   const totalEl = document.getElementById('stalledTotal');
-  const ring = document.getElementById('stalledDonutRing');
   if (!legend || !totalEl) return;
 
   // Build reason counts from stalled_deals array (field: dropdown_mkzqf8nk)
@@ -2569,9 +2645,6 @@ function renderStalledDeals(data) {
     : (data.top_actions || []).filter(a => a.stall_reason || a.dropdown_mkzqf8nk)
         .map(a => ({ lead_name: a.lead_name, lead_url: a.lead_url, stall_reason: a.stall_reason || a.dropdown_mkzqf8nk, group: a.group }));
 
-  // Update ring color to red-orange (stalled = urgent)
-  if (ring) ring.setAttribute('stroke', '#FE5C4C');
-
   if (reasons.length === 0) {
     // Demo fallback so it looks populated until real data arrives
     const demoReasons = [
@@ -2580,6 +2653,9 @@ function renderStalledDeals(data) {
       ['Waiting On Response', 1],
     ];
     totalEl.textContent = demoReasons.reduce((s, [, c]) => s + c, 0);
+    renderDonutSegments('stalledDonutSegments', demoReasons.map(([, count], i) => ({
+      value: count, color: STALL_COLORS[i % STALL_COLORS.length].dot
+    })));
     legend.innerHTML = demoReasons.map(([reason, count], i) => {
       const c = STALL_COLORS[i % STALL_COLORS.length];
       return `<div class="sf-legend-item">
@@ -2590,7 +2666,12 @@ function renderStalledDeals(data) {
     return;
   }
 
-  legend.innerHTML = reasons.slice(0, 5).map(([reason, count], i) => {
+  const topReasons = reasons.slice(0, 5);
+  renderDonutSegments('stalledDonutSegments', topReasons.map(([, count], i) => ({
+    value: count, color: STALL_COLORS[i % STALL_COLORS.length].dot
+  })));
+
+  legend.innerHTML = topReasons.map(([reason, count], i) => {
     const c = STALL_COLORS[i % STALL_COLORS.length];
     return `<div class="sf-legend-item">
       <div class="sf-legend-dot" style="background:${c.dot};"></div>
@@ -2638,19 +2719,23 @@ function openWidgetDrawer(type) {
 
   if (type === 'followups') {
     let records = _widgetDrawerData.followups || [];
-    title.innerHTML = `Follow-ups next 7 days <span class="widget-drawer-count-badge">${records.length}</span>`;
-    subtitle.textContent = 'Scheduled outreach — yesterday through 7 days out, sorted soonest first';
+    title.innerHTML = `Upcoming &amp; overdue next actions <span class="widget-drawer-count-badge">${records.length}</span>`;
+    subtitle.textContent = 'Overdue by 3+ days and due within the next 7 days, by follow-up date — sorted soonest first';
     // Helper: tag a follow-up date string with a colored badge
     const _fuNow = new Date(); _fuNow.setHours(12,0,0,0);
+    const _fuOverdueCutoff = new Date(_fuNow.getTime() - 3*86400000);
+    const _fuWeekOut = new Date(_fuNow.getTime() + 7*86400000);
     function _fuTag(dateStr) {
       const iso = String(dateStr).match(/^\d{4}-\d{2}-\d{2}$/);
       const d = iso ? new Date(dateStr + 'T12:00:00') : new Date(dateStr + ' ' + _fuNow.getFullYear());
       if (!d || isNaN(d)) return '';
-      const ds = d.toDateString();
-      if (ds === new Date(_fuNow.getTime() - 86400000).toDateString()) return '<span class="fu-tag fu-tag-yesterday">Yesterday</span>';
-      if (ds === _fuNow.toDateString())                                 return '<span class="fu-tag fu-tag-today">Today</span>';
-      if (ds === new Date(_fuNow.getTime() + 86400000).toDateString()) return '<span class="fu-tag fu-tag-tomorrow">Tomorrow</span>';
-      return '<span class="fu-tag fu-tag-upcoming">Upcoming Soon</span>';
+      if (d.getTime() < _fuOverdueCutoff.getTime()) {
+        const days = Math.round((_fuNow.getTime() - d.getTime()) / 86400000);
+        return `<span class="fu-tag fu-tag-yesterday">Overdue ${days}d</span>`;
+      }
+      if (d.toDateString() === _fuNow.toDateString()) return '<span class="fu-tag fu-tag-today">Today</span>';
+      if (d.getTime() <= _fuWeekOut.getTime())        return '<span class="fu-tag fu-tag-upcoming">Upcoming</span>';
+      return '';
     }
     head.innerHTML = `<tr>
       <th>Record name</th>
@@ -2753,8 +2838,8 @@ const DEMO_DATA = {
   },
   "pipeline_summary": {
     "total_active": 42,
-    "in_negotiation": 5,
-    "interested_in_selling": 9
+    "in_follow_up": 18,
+    "active_opportunities": 7
   },
   "top_actions": [
     {
