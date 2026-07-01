@@ -1988,140 +1988,10 @@
 </head>
 <body>
 <div class="page">
-<!-- WORKSPACE TABS — at the very top -->
-<div class="workspace-tabs">
-  <button class="workspace-tab active" id="tabDashboard" onclick="switchTab('dashboard')">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M60 60h160v160H60zm240 0h160v160H300zM60 300h160v160H60zm240 0h160v160H300z"/></svg>
-    Dashboard
-  </button>
-  <button class="workspace-tab" id="tabCalendar" onclick="switchTab('calendar')">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 520" fill="currentColor"><path d="M400 60H360V40c0-11-9-20-20-20s-20 9-20 20v20H200V40c0-11-9-20-20-20s-20 9-20 20v20H120C97 60 78 79 78 102v316c0 23 19 42 42 42h280c23 0 42-19 42-42V102c0-23-19-42-42-42zm2 358H118V180h284v238zM118 140v-38h42v20c0 11 9 20 20 20s20-9 20-20v-20h120v20c0 11 9 20 20 20s20-9 20-20v-20h42v38H118z"/></svg>
-    Calendar
-  </button>
-</div>
 <!-- TOP BAR -->
 <!-- MAIN TOP CARD -->
-<div class="global-top-bar" style="display: flex; justify-content: flex-end; width: 100%; margin-bottom: 17px; position: relative; z-index: 50;"><div class="activity-dropdown" id="activityDropdown">
-<div class="activity-pill" onclick="toggleActivity()">
-<div class="activity-pill-dot"></div>
-        Last 2 Weeks Activity
-        <span class="activity-pill-caret" id="activityCaret">▾</span>
-</div>
-<div class="activity-menu" id="activityMenu">
-<div class="activity-menu-title">Your Activity · Last 14 Days</div>
-<div class="activity-item"><div class="activity-icon-wrap" style="background:#06a59a;"><svg fill="#fff" viewbox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M780 440H220c-20 0-28 25-11 36l146 94c7 5 11 14 8 22l-55 183c-6 20 20 34 35 19l142-150c8-9 22-9 30 0l142 150c14 15 40 1 35-19l-55-183c-2-8 1-17 8-22l146-94c17-11 9-36-11-36z"></path><circle cx="500" cy="290" r="90"></circle></svg></div><div class="activity-item-info"><div class="activity-item-label">New Leads Added</div></div><div class="activity-item-count">14</div></div>
-<div class="activity-item"><div class="activity-icon-wrap" style="background:#3ba755;"><svg fill="#fff" viewbox="0 0 520 520" xmlns="http://www.w3.org/2000/svg"><path d="m485 378-61-49a39 39 0 0 0-48-1l-52 38c-6 5-15 4-21-2l-78-70-70-78c-6-6-6-14-2-21l38-52c11-14 10-34-1-48l-49-61a40 40 0 0 0-59-3L32 83c-8 8-12 20-12 31 5 102 51 199 119 267s165 114 267 119c11 1 22-4 30-12l52-52c17-16 16-44-3-58z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Conversations Started</div></div><div class="activity-item-count">8</div></div>
-<div class="activity-item"><div class="activity-icon-wrap" style="background:#ff5d2d;"><svg fill="#fff" viewbox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path d="M711 690H289c-10 0-19 9-19 19v1c0 33 27 60 60 60h340c33 0 60-27 60-60v-1c0-10-9-19-19-19zm49-410a60 60 0 0 0-39 106c-17 39-56 66-102 64-53-3-96-46-99-99 0-9 0-17 2-25a60 60 0 0 0-22-116 60 60 0 0 0-22 116c2 8 2 16 2 25-3 53-46 96-99 99-46 3-86-25-102-64a60 60 0 0 0-39-106c-33 0-60 27-60 60s27 60 60 60l28 214c1 9 9 16 19 16h426c9 0 17-7 19-16l28-214c33 0 60-27 60-60s-27-60-60-60z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Pipeline Movement</div></div><div class="activity-item-count">5</div></div>
-<div class="activity-item"><div class="activity-icon-wrap" style="background:#1b96ff;"><svg fill="#fff" viewbox="0 0 520 520" xmlns="http://www.w3.org/2000/svg"><path d="m387 402-48 16-13 2c-14 0-28-7-37-18s-11-27-8-41l16-57 75-75c3-3 1-9-4-9H55c-8 0-15 7-15 15v185c0 22 18 40 40 40h280c22 0 40-18 40-40v-8c0-7-7-12-13-10zM55 180h330c8 0 15-7 15-15v-25c0-22-18-40-40-40h-30V90c0-16-13-30-30-30-16 0-30 13-30 30v10H170V90c0-16-13-30-30-30-16 0-30 13-30 30v10H80c-22 0-40 18-40 40v25c0 8 7 15 15 15zm380 51c-2-2-5-2-7 0l-94 94-14 47c-1 5 3 9 8 8l47-14 94-94c2-2 2-5 0-7zm80-29-18-18c-6-6-17-6-24 0l-16 17c-2 2-2 5 0 7l34 34c2 2 5 2 7 0l17-16c7-6 7-17 0-24z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Follow-Ups Set</div></div><div class="activity-item-count">11</div></div>
-<div class="activity-item"><div class="activity-icon-wrap" style="background:#ff538a;"><svg fill="#fff" viewbox="0 0 520 520" xmlns="http://www.w3.org/2000/svg"><path d="m488 74-42-42a39 39 0 0 0-56 0l-33 33c-4 4-4 10 0 14l85 85c4 4 10 4 14 0l33-33c15-16 15-41-1-57zm-159 33c-4-4-10-4-14 0L54 368 21 481c-3 11 7 22 18 19l114-32h-1l261-261c4-4 4-10 0-14z"></path></svg></div><div class="activity-item-info"><div class="activity-item-label">Offers Made</div></div><div class="activity-item-count">2</div></div>
-</div>
-</div></div>
-
-<!-- DASHBOARD PANEL -->
-<div class="workspace-panel active" id="panelDashboard">
-<div class="top-unified-card" style="display: flex; align-items: center; justify-content: flex-start; gap: 32px; background: #eef2ff; border-radius: 24px; padding: 18px 32px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #dce4f5; margin-bottom: 16px;"><div class="header-text-block" style="flex: 0 0 460px; min-width: 300px;"><div>
-<div class="top-bar-title" style="font-size: 15px; font-weight: 400; color: #6b7280; margin-bottom: 4px;">Hi, Christian.</div>
-<div class="top-bar-title" style="font-size: 34.5px; font-weight: 400;">Sales Workspace</div>
-<div class="top-bar-sub" id="topBarSub" style="font-size: 17px; font-weight: 400; margin-top: 10px;">Loading your pipeline brief…</div>
-</div></div><div class="unified-card-widgets" style="display: flex; gap: 24px; align-items: stretch; flex: 1;"><div class="left-metrics">
-<div class="metric-card-blue">
-<div class="label">Active Leads</div>
-<div class="value" id="metricTotal">—</div>
-</div>
-<div class="metric-card-white">
-<div class="label">Leads in Follow-Up</div>
-<div class="value" id="metricFollowUp">—</div>
-</div>
-<div class="metric-card-white" style="margin-bottom:0;">
-<div class="label">Active Opportunities</div>
-<div class="value" id="metricOpportunities">—</div>
-</div>
-</div><div class="right-panel" style="flex: 1; min-width: 560px; display: flex; flex-direction: row; gap: 20px;">
-
-<!-- WIDGET 1: Follow-ups in next 7 days (Salesforce replica) -->
-<div class="mini-widget-card" style="flex: 1;">
-  <div class="sf-widget-header">
-    <h2 class="sf-widget-title">Upcoming &amp; Overdue Next Actions</h2>
-    <p class="sf-widget-subtitle">Actions for the next 7 days</p>
-  </div>
-  <div class="sf-widget-body">
-    <div class="sf-donut-wrapper">
-      <svg viewBox="0 0 100 100" class="sf-donut-svg">
-        <circle fill="transparent" stroke="#eef1f5" stroke-width="4.08" cx="50" cy="50" r="46"/>
-        <g id="followupDonutSegments"></g>
-      </svg>
-      <div class="sf-donut-center">
-        <div class="sf-donut-number" id="followupTotal">—</div>
-        <div class="sf-donut-label">Actions</div>
-      </div>
-    </div>
-    <div class="sf-legend-wrapper">
-      <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#339a87;"></div>
-        <div class="sf-legend-pill" style="background:#bcf5e8; color:#339a87;"><span id="followupUpcoming">0</span> Upcoming Actions</div>
-      </div>
-      <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#FE5C4C;"></div>
-        <div class="sf-legend-pill" style="background:#FDE4E1; color:#CA3831;"><span id="followupOverdue">0</span> Overdue Actions</div>
-      </div>
-    </div>
-  </div>
-  <div class="sf-widget-footer">
-    <button class="sf-view-btn" onclick="openWidgetDrawer('followups')">View Next Actions</button>
-  </div>
-</div>
-
-<!-- WIDGET 2: Stalled Deals -->
-<div class="mini-widget-card" style="flex: 1;">
-  <div class="sf-widget-header">
-    <h2 class="sf-widget-title">Stalled Deals</h2>
-    <p class="sf-widget-subtitle">Deals stalled by reason</p>
-  </div>
-  <div class="sf-widget-body">
-    <div class="sf-donut-wrapper">
-      <svg viewBox="0 0 100 100" class="sf-donut-svg">
-        <circle fill="transparent" stroke="#eef1f5" stroke-width="4.08" cx="50" cy="50" r="46"/>
-        <g id="stalledDonutSegments"></g>
-      </svg>
-      <div class="sf-donut-center">
-        <div class="sf-donut-number" id="stalledTotal">—</div>
-        <div class="sf-donut-label">Stalled</div>
-      </div>
-    </div>
-    <div class="sf-legend-wrapper" id="stalledLegend">
-      <div class="sf-legend-item">
-        <div class="sf-legend-dot" style="background:#9ca3af;"></div>
-        <div class="sf-legend-pill" style="background:#f3f4f6; color:#6b7280;">Loading…</div>
-      </div>
-    </div>
-  </div>
-  <div class="sf-widget-footer">
-    <button class="sf-view-btn" onclick="openWidgetDrawer('stalled')">View Stalled Deals</button>
-  </div>
-</div>
-
-</div></div></div><!-- /main-top-card -->
-<!-- ACTIONS FOR YOU -->
-<div class="actions-section">
-<div class="actions-title">Actions for You</div>
-<div class="actions-subtitle" id="actionsSubtitle">Loading priority actions…</div>
-<div class="actions-header-row">
-<div class="col-label">Suggestion</div>
-<div class="col-label">Related To</div>
-<div class="col-label">Agent Rationale</div>
-<div class="col-label">Suggested Action</div>
-</div>
-<div id="actionsContainer">
-<div class="ai-brief-loading" style="padding: 40px 0;">
-<div class="ai-brief-spinner"></div>
-<div class="ai-brief-loading-text">Loading actions…</div>
-</div>
-</div>
-</div><!-- /actions-section -->
-</div><!-- /panelDashboard -->
-
 <!-- CALENDAR PANEL -->
-<div class="workspace-panel" id="panelCalendar">
+<div class="workspace-panel active" id="panelCalendar">
   <div class="cal-container" id="calContainer">
     <div class="cal-toolbar">
       <span class="cal-title" id="calTitle">May 2026</span>
@@ -2921,8 +2791,8 @@ const DEMO_DATA = {
 
 // ── Init ───────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  loadBriefData();
-  fetchCalendarEvents(); // fire calendar webhook immediately on page load; DOM render happens when tab is opened
+  fetchCalendarEvents(); // fire calendar webhook immediately on page load
+  initCalendar();        // render the calendar DOM now that it is the main view
 });
 
 // ── Action Drawer ──────────────────────────────────────────
